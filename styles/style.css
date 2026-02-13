@@ -222,7 +222,7 @@
   .hero-section {
     background-image: url("../img/hero-img-mobile.png");
     background-size: contain;
-    min-height: 70vh;
+    /* min-height: 70vh; */
 
   }
 }
