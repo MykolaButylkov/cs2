@@ -1,11 +1,76 @@
 <!DOCTYPE html>
-<html lang="he" >
+<html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CS2</title>
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <title>Document</title>
 </head>
+
 <body>
-    <h1>CS2</h1>
+   <header class="site-header">
+  <div class="header-container">
+
+    
+
+    <!-- Burger button (mobile) -->
+    <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="logo">
+      <img class="logo_img" src="./img/logo.png" alt="CS2" />
+      <span>CS2 TOURNAMENTS</span>
+    </div>
+
+    <!-- Desktop nav -->
+    <nav class="nav">
+      <a href="#" class="active">Home</a>
+      <a href="#">Tournaments</a>
+      <a href="#">News</a>
+      <a href="#">About</a>
+    </nav>
+
+    <!-- Desktop auth -->
+    <div class="auth">
+      <a href="#" class="login">Log in</a>
+      <a href="#" class="signup">Sign Up</a>
+    </div>
+
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div class="mobile-menu" id="mobileMenu">
+    <nav class="mobile-nav">
+      <a href="#" class="active">Home</a>
+      <a href="#">Tournaments</a>
+      <a href="#">News</a>
+      <a href="#">About</a>
+    </nav>
+
+    <div class="mobile-auth">
+      <a href="#" class="login">Log in</a>
+      <a href="#" class="signup">Sign Up</a>
+    </div>
+  </div>
+</header>
+
+
+    <section class="hero-section">
+        <h1 class="hero-section_title">Organize & Compete in <br>cs2 tournaments</h1>
+        <button class="hero-section_btn">Browse Tournaments</button>
+    </section>
+    <section class="amount-section">
+
+    </section>
+    <!-- <img src="./img/hero-img-2.png" alt=""> -->
+
+    <script src="./js/burger-menu.js"></script>
 </body>
+
 </html>

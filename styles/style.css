@@ -1,0 +1,277 @@
+* {
+    font-family: "Rajdhani", sans-serif;
+}
+/* ===== HEADER ===== */
+
+.site-header {
+    position: absolute;
+    /* поверх hero */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    background: rgba(255, 255, 255, 0.08);
+    /* легкая прозрачность */
+    backdrop-filter: blur(6px);
+    /* стеклянный эффект */
+    -webkit-backdrop-filter: blur(6px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.header-container {
+    font-size: 22px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ===== LOGO ===== */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-weight: 700;
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.logo img {
+    width: 60px;
+}
+
+/* ===== NAV ===== */
+
+.nav {
+    display: flex;
+    gap: 30px;
+}
+
+.nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    opacity: 0.85;
+    transition: 0.2s;
+}
+
+.nav a:hover,
+.nav a.active {
+    opacity: 1;
+}
+
+/* ===== BURGER + MOBILE MENU ===== */
+
+.burger{
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.10);
+  border-radius: 10px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.burger span{
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: #fff;
+  margin: 6px 0;
+  transition: 0.25s;
+  opacity: 0.9;
+}
+
+/* dropdown container */
+.mobile-menu{
+  display: none;
+  width: 100%;
+  background: rgba(10, 12, 18, 0.55);
+  border-top: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.mobile-menu.open{
+  display: block;
+}
+
+.mobile-nav, .mobile-auth{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 20px;
+}
+
+.mobile-nav{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-nav a{
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.mobile-auth{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 16px;
+}
+
+/* Animate burger to X */
+.burger.open span:nth-child(1){
+  transform: translateY(8px) rotate(45deg);
+}
+.burger.open span:nth-child(2){
+  opacity: 0;
+}
+.burger.open span:nth-child(3){
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Responsive behavior */
+@media (max-width: 1160px){
+  .nav, .auth{
+    display: none;
+  }
+  .burger{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* чтобы dropdown был сразу под header */
+  .site-header{
+    position: absolute; /* у тебя так и стоит */
+  }
+}
+
+
+/* ===== AUTH ===== */
+
+.auth {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.login {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+/* ===== SIGN UP BUTTON ===== */
+
+.signup {
+    background: linear-gradient(180deg, #78c850, #4fa92a);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+
+    box-shadow: 0 3px 0 #3d8c22;
+    transition: 0.2s;
+}
+
+.signup:hover {
+    transform: translateY(1px);
+    box-shadow: 0 2px 0 #3d8c22;
+}
+
+.hero-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 18px;
+    min-height: 100vh;
+    /* всегда на весь экран */
+    background-size: auto 100%; /* высота = 100% блока, ширина авто */
+
+    background-image: url("../img/hero-img.png");
+    background-size: cover;
+    /* ВАЖНО */
+    background-repeat: no-repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1160px) {
+  .hero-section {
+    background-image: url("../img/hero-img-mobile.png");
+    background-size: contain;
+    min-height: 70vh;
+
+  }
+}
+
+.hero-section_title {
+    font-size: 60px;
+    text-transform: uppercase;
+    color: #2F4559;
+    text-align: center
+}
+
+@media (max-width: 1160px) {
+  .hero-section_title {
+    font-size: 30px;
+    position: absolute;
+    top: 100px;
+    
+  }
+}
+
+.hero-section_btn {
+    background-color: #639DD7;
+    color: white;
+    border: 1px;
+    box-shadow: #2F4559;
+    width: 230px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    
+}
+
+@media (max-width: 1160px) {
+    .hero-section_btn {
+         position: absolute;
+    top: 200px;
+    }
+}
+
+.amount-section {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    /* всегда на весь экран */
+       background-image: url("../img/hero-people-img-2.png");
+    background-size: cover;
+    /* ВАЖНО */
+    background-repeat: no-repeat;
+    align-items: center;
+    justify-content: center;
+}
