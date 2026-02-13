@@ -221,7 +221,6 @@
 @media (max-width: 1160px) {
   .hero-section {
     background-image: url("../img/hero-img-mobile.png");
-    background-size: contain;
     min-height: 65vh;
 
   }
