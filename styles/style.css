@@ -205,10 +205,10 @@
     flex-direction: column;
   width: 100%;
   margin: 0 auto;
-  padding: 0 18px;
+  /* padding: 0 18px; */
     min-height: 100vh;
     /* всегда на весь экран */
-    background-size: auto 100%; /* высота = 100% блока, ширина авто */
+    /* background-size: auto 100%; высота = 100% блока, ширина авто */
 
     background-image: url("../img/hero-img.png");
     background-size: cover;
@@ -222,7 +222,7 @@
   .hero-section {
     background-image: url("../img/hero-img-mobile.png");
     background-size: contain;
-    /* min-height: 70vh; */
+    min-height: 65vh;
 
   }
 }
@@ -239,6 +239,8 @@
     font-size: 30px;
     position: absolute;
     top: 100px;
+    color: #2F4559;
+
     
   }
 }
@@ -269,7 +271,7 @@
     min-height: 100vh;
     /* всегда на весь экран */
        background-image: url("../img/hero-people-img-2.png");
-    background-size: cover;
+    background-size: contain;
     /* ВАЖНО */
     background-repeat: no-repeat;
     align-items: center;
