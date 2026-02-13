@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CS2 Tournaments</title>
+
+  <style>
+    /* =======================================================
+       CS2 TOURNAMENTS — PREMIUM ESPORTS THEME (ONE FILE)
+       Includes:
+       - Header gradient like screenshot
+       - Neon animated borders (premium)
+       - Tournament cards + hover
+       - Payment block styling
+       - Registration form styling
+    ======================================================= */
+
+    :root{
+      --bg0:#14081f;
+      --bg1:#1d0b2e;
+      --bg2:#2b0f3a;
+
+      --vio0:#1e0b2e;
+      --vio1:#3b1350;
+      --vio2:#5a1f6e;
+      --vio3:#7c2b82;
+
+      --gold0:#ffb84d;
+      --gold1:#ffd98a;
+
+      --text:#ffffff;
+      --muted:#cfc7d7;
+
+      --cardA:#2b0f3a;
+      --cardB:#1d0b2e;
+
+      --shadow: 0 0 30px rgba(255, 170, 60, 0.18);
+      --shadowStrong: 0 0 45px rgba(255, 170, 60, 0.28);
+
+      --radius: 16px;
+      --radius2: 20px;
+      --border: 1px solid rgba(255, 217, 138, 0.18);
+
+      --max: 1120px;
+    }
+
+    /* ============================= */
+    /*            RESET              */
+    /* ============================= */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      background: linear-gradient(180deg, var(--bg0), var(--bg1) 45%, var(--bg2));
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button, input, select { font-family: inherit; }
+
+    /* ============================= */
+    /*         LAYOUT HELPERS        */
+    /* ============================= */
+    .container{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+    .stack-10 > * + * { margin-top: 10px; }
+    .stack-14 > * + * { margin-top: 14px; }
+    .stack-18 > * + * { margin-top: 18px; }
+    .stack-24 > * + * { margin-top: 24px; }
+
+    /* ============================= */
+    /*      PREMIUM NEON WRAPPER     */
+    /* ============================= */
+    .neon-wrap{
+      position: relative;
+      border-radius: var(--radius2);
+      overflow: hidden;
+      isolation: isolate;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* animated neon border */
+    .neon-wrap::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: conic-gradient(
+        from 0deg,
+        rgba(255,184,77,0.0),
+        rgba(255,184,77,0.8),
+        rgba(124,43,130,0.9),
+        rgba(255,217,138,0.9),
+        rgba(90,31,110,0.9),
+        rgba(255,184,77,0.85),
+        rgba(255,184,77,0.0)
+      );
+      filter: blur(8px);
+      opacity: 0.55;
+      z-index: -2;
+      animation: spinGlow 6s linear infinite;
+    }
+
+    .neon-wrap::after{
+      content:"";
+      position:absolute;
+      inset:1px;
+      border-radius: calc(var(--radius2) - 2px);
+      background: linear-gradient(180deg, rgba(20,8,31,0.85), rgba(43,15,58,0.78));
+      z-index:-1;
+    }
+
+    @keyframes spinGlow{
+      to { transform: rotate(360deg); }
+    }
+
+    /* premium hover: lift + glow + sheen */
+    .premium-hover{
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .premium-hover:hover{
+      transform: translateY(-6px);
+      box-shadow: var(--shadowStrong);
+      border-color: rgba(255,217,138,0.28);
+    }
+    .premium-hover:hover .sheen::before{
+      transform: translateX(160%);
+      opacity: 1;
+    }
+
+    .sheen{
+      position: relative;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+    .sheen::before{
+      content:"";
+      position:absolute;
+      top:-30%;
+      left:-60%;
+      width: 50%;
+      height: 160%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+      transform: translateX(0%);
+      opacity: 0;
+      transition: transform .55s ease, opacity .35s ease;
+      pointer-events:none;
+    }
+
+    /* ============================= */
+    /*             HEADER            */
+    /* ============================= */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: linear-gradient(90deg, #1e0b2e, #3b1350, #5a1f6e, #7c2b82);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      border-bottom: 1px solid rgba(255,217,138,0.10);
+    }
+    .header-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 16px;
+      padding: 14px 0;
+      position: relative;
+    }
+    .header-inner::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 18% 50%, rgba(255,190,90,0.18), transparent 60%),
+        radial-gradient(circle at 85% 50%, rgba(255,170,60,0.12), transparent 65%);
+      pointer-events:none;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: var(--gold1);
+      text-transform: uppercase;
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .brand-badge{
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(255,184,77,0.95), rgba(124,43,130,0.95));
+      box-shadow: 0 0 18px rgba(255,184,77,0.28);
+      display:grid;
+      place-items:center;
+    }
+    .brand-badge span{
+      width: 14px;
+      height: 14px;
+      border-radius: 5px;
+      background: rgba(20,8,31,0.75);
+      border: 1px solid rgba(255,217,138,0.35);
+    }
+
+    nav{
+      display:flex;
+      align-items:center;
+      gap: 22px;
+      position: relative;
+      z-index: 1;
+    }
+    nav a{
+      color: #f5c96a;
+      font-weight: 650;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      transition: .25s ease;
+    }
+    nav a:hover{
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255,190,90,0.65);
+      background: rgba(255,217,138,0.08);
+      border: 1px solid rgba(255,217,138,0.10);
+    }
+    nav a.active{
+      background: rgba(255,217,138,0.12);
+      border: 1px solid rgba(255,217,138,0.18);
+      color: #fff;
+    }
+
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================= */
+    /*            BUTTONS            */
+    /* ============================= */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: 750;
+      font-size: 14px;
+      cursor:pointer;
+      border: 1px solid transparent;
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease, background .2s ease, border-color .2s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .btn-ghost{
+      background: rgba(20,8,31,0.28);
+      border-color: rgba(255,217,138,0.14);
+      color: #f5c96a;
+    }
+    .btn-ghost:hover{
+      background: rgba(255,217,138,0.10);
+      border-color: rgba(255,217,138,0.24);
+      box-shadow: 0 0 22px rgba(255,184,77,0.18);
+    }
+
+    .btn-gold{
+      background: linear-gradient(90deg, var(--gold0), var(--gold1));
+      color: #2b0f3a;
+      box-shadow: 0 0 26px rgba(255,190,90,0.35);
+    }
+    .btn-gold:hover{
+      filter: brightness(1.02);
+      box-shadow: 0 0 36px rgba(255,190,90,0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-violet{
+      background: linear-gradient(90deg, var(--vio2), var(--vio3));
+      color: #fff;
+      box-shadow: 0 0 26px rgba(124,43,130,0.28);
+      border-color: rgba(255,217,138,0.10);
+    }
+    .btn-violet:hover{
+      box-shadow: 0 0 38px rgba(124,43,130,0.45);
+      transform: translateY(-2px);
+    }
+
+    /* ============================= */
+    /*             HERO              */
+    /* ============================= */
+    .hero{
+      position: relative;
+      padding: 70px 0 40px;
+    }
+
+    /* You can replace background image here */
+    .hero-bg{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,190,90,0.25), transparent 60%),
+        linear-gradient(180deg, rgba(20,8,31,0.25), rgba(20,8,31,0.75)),
+        url("https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1920&q=60");
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.05) contrast(1.05);
+      z-index:-2;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(20,8,31,0.75), rgba(20,8,31,0.92));
+      z-index:-1;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .hero-title{
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.05;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    .hero-title .grad{
+      background: linear-gradient(90deg, var(--gold1), var(--gold0));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 16px rgba(255,190,90,0.15);
+    }
+    .hero-sub{
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 58ch;
+    }
+
+    .hero-cta{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    /* Right-side mini card (like screenshot highlights) */
+    .hero-side{
+      padding: 18px;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .kpi .box{
+      border-radius: 14px;
+      border: 1px solid rgba(255,217,138,0.14);
+      background: rgba(20,8,31,0.35);
+      padding: 12px;
+    }
+    .kpi .n{
+      font-weight: 900;
+      font-size: 20px;
+      color: var(--gold1);
+    }
+    .kpi .t{
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    /* ============================= */
+    /*       TOURNAMENT BANNER       */
+    /* ============================= */
+    .banner{
+      margin-top: 18px;
+      padding: 18px;
+    }
+    .banner-grid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items:center;
+    }
+    .banner h2{
+      margin: 0;
+      font-size: 18px;
+      color: rgba(255,255,255,0.92);
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+    .prize{
+      font-size: 44px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, var(--gold1), var(--gold0));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 8px 0 0;
+      text-shadow: 0 0 18px rgba(255,190,90,0.10);
+    }
+    .banner-meta{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      margin-top: 10px;
+      color: rgba(255,255,255,0.78);
+      font-size: 13px;
+    }
+    .dot{
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,217,138,0.8);
+      box-shadow: 0 0 10px rgba(255,190,90,0.55);
+    }
+    .banner-actions{
+      display:flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    /* ============================= */
+    /*            FEATURES           */
+    /* ============================= */
+    .features{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .feature{
+      padding: 16px;
+    }
+    .feature .icon{
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,217,138,0.18);
+      background: rgba(20,8,31,0.35);
+      display:grid;
+      place-items:center;
+      box-shadow: 0 0 18px rgba(255,184,77,0.12);
+    }
+    .feature .icon svg{
+      width: 22px; height: 22px;
+      opacity: 0.95;
+    }
+    .feature h3{
+      margin: 10px 0 6px;
+      font-size: 14px;
+      color: var(--gold1);
+      letter-spacing: 0.2px;
+    }
+    .feature p{
+      margin: 0;
+      font-size: 12.8px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.55;
+    }
+
+    /* ============================= */
+    /*       UPCOMING TOURNAMENTS    */
+    /* ============================= */
+    section{
+      padding: 34px 0;
+    }
+    .section-title{
+      text-align:center;
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: var(--gold1);
+      letter-spacing: 0.3px;
+    }
+    .section-sub{
+      text-align:center;
+      margin: 0 auto 18px;
+      color: rgba(255,255,255,0.72);
+      max-width: 72ch;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .card{
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255,217,138,0.14);
+      background: linear-gradient(180deg, rgba(43,15,58,0.78), rgba(29,11,46,0.78));
+    }
+    .card .thumb{
+      height: 110px;
+      background:
+        linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
+        radial-gradient(circle at 30% 30%, rgba(255,190,90,0.12), transparent 55%),
+        url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=60");
+      background-size: cover;
+      background-position: center;
+    }
+    .card:nth-child(2) .thumb{
+      background-image:
+        linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
+        radial-gradient(circle at 30% 30%, rgba(255,190,90,0.12), transparent 55%),
+        url("https://images.unsplash.com/photo-1546443046-ed1ce6ffd1a9?auto=format&fit=crop&w=1200&q=60");
+    }
+    .card:nth-child(3) .thumb{
+      background-image:
+        linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
+        radial-gradient(circle at 30% 30%, rgba(255,190,90,0.12), transparent 55%),
+        url("https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=1200&q=60");
+    }
+    .card:nth-child(4) .thumb{
+      background-image:
+        linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
+        radial-gradient(circle at 30% 30%, rgba(255,190,90,0.12), transparent 55%),
+        url("https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?auto=format&fit=crop&w=1200&q=60");
+    }
+
+    .card .content{
+      padding: 14px;
+    }
+    .card h4{
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.92);
+      letter-spacing: 0.2px;
+    }
+    .meta{
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      color: rgba(255,255,255,0.70);
+      font-size: 12.5px;
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pill{
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,217,138,0.14);
+      background: rgba(20,8,31,0.35);
+      color: rgba(255,255,255,0.85);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .online{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .online .g{
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #38ff8a;
+      box-shadow: 0 0 14px rgba(56,255,138,0.35);
+    }
+
+    .section-actions{
+      display:flex;
+      justify-content:center;
+      margin-top: 16px;
+    }
+
+    /* ============================= */
+    /*          PAYMENT BLOCK        */
+    /* ============================= */
+    .pay-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+      margin-top: 14px;
+    }
+
+    .pay-card{
+      padding: 18px;
+    }
+
+    .pay-title{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .pay-title h3{
+      margin: 0;
+      font-size: 16px;
+      color: var(--gold1);
+      letter-spacing: 0.2px;
+    }
+    .secure-badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,217,138,0.16);
+      background: rgba(20,8,31,0.35);
+      color: rgba(255,255,255,0.78);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .secure-badge .lock{
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: rgba(255,217,138,0.85);
+      box-shadow: 0 0 12px rgba(255,190,90,0.35);
+    }
+
+    .pay-options{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .option{
+      border-radius: 14px;
+      border: 1px solid rgba(255,217,138,0.14);
+      background: rgba(20,8,31,0.35);
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: .25s ease;
+    }
+    .option:hover{
+      border-color: rgba(255,217,138,0.26);
+      box-shadow: 0 0 26px rgba(255,190,90,0.14);
+      transform: translateY(-2px);
+    }
+    .option .left{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+    }
+    .option .logo-mini{
+      width: 44px; height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,217,138,0.16);
+      background: linear-gradient(135deg, rgba(255,184,77,0.25), rgba(124,43,130,0.25));
+      display:grid;
+      place-items:center;
+      color: rgba(255,255,255,0.9);
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      font-size: 12px;
+    }
+    .option .name{
+      display:flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .option .name b{
+      font-size: 13px;
+      color: rgba(255,255,255,0.92);
+    }
+    .option .name span{
+      font-size: 12px;
+      color: rgba(255,255,255,0.70);
+    }
+
+    .price{
+      font-weight: 900;
+      color: var(--gold1);
+      text-shadow: 0 0 12px rgba(255,190,90,0.15);
+      white-space: nowrap;
+    }
+
+    .pay-note{
+      margin-top: 10px;
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ============================= */
+    /*        REGISTRATION FORM      */
+    /* ============================= */
+    .form-card{
+      padding: 18px;
+    }
+    .form-title{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .form-title h3{
+      margin: 0;
+      font-size: 16px;
+      color: var(--gold1);
+      letter-spacing: 0.2px;
+    }
+    .form-title p{
+      margin: 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.70);
+    }
+
+    form{
+      display:grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label{
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+    }
+    input, select{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,217,138,0.14);
+      outline: none;
+      background: rgba(20,8,31,0.40);
+      color: rgba(255,255,255,0.92);
+      transition: .2s ease;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.40); }
+    input:focus, select:focus{
+      border-color: rgba(255,217,138,0.32);
+      box-shadow: 0 0 24px rgba(255,190,90,0.16);
+    }
+
+    .form-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+    .tiny{
+      font-size: 12px;
+      color: rgba(255,255,255,0.66);
+      line-height: 1.5;
+    }
+
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,217,138,0.18), transparent);
+      margin: 18px 0;
+    }
+
+    /* ============================= */
+    /*             FOOTER            */
+    /* ============================= */
+    footer{
+      padding: 30px 0 50px;
+      border-top: 1px solid rgba(255,217,138,0.10);
+      margin-top: 26px;
+      background: linear-gradient(90deg, rgba(30,11,46,0.45), rgba(43,15,58,0.35));
+    }
+    .footer-grid{
+      display:flex;
+      gap: 14px;
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap: wrap;
+      color: rgba(255,255,255,0.68);
+      font-size: 13px;
+    }
+    .footer-links{
+      display:flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-links a{
+      color: rgba(255,217,138,0.85);
+    }
+    .footer-links a:hover{
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255,190,90,0.50);
+    }
+
+    /* ============================= */
+    /*           RESPONSIVE          */
+    /* ============================= */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .cards{ grid-template-columns: repeat(2, 1fr); }
+      .features{ grid-template-columns: 1fr; }
+      .banner-grid{ grid-template-columns: 1fr; }
+      .banner-actions{ justify-content: flex-start; }
+      .pay-grid{ grid-template-columns: 1fr; }
+      header .header-inner{ gap: 10px; }
+      nav{ gap: 10px; flex-wrap: wrap; justify-content: center; }
+    }
+    @media (max-width: 520px){
+      .grid-2{ grid-template-columns: 1fr; }
+      .cards{ grid-template-columns: 1fr; }
+      .header-actions{ width: 100%; justify-content: center; }
+      .brand{ width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a class="brand" href="#">
+          <span class="brand-badge"><span></span></span>
+          <span>CS2 TOURNAMENTS</span>
+        </a>
+
+        <nav>
+          <a class="active" href="#home">Home</a>
+          <a href="#tournaments">Tournaments</a>
+          <a href="#news">News</a>
+          <a href="#about">About</a>
+        </nav>
+
+        <div class="header-actions">
+          <a class="btn btn-ghost" href="#login">Log in</a>
+          <a class="btn btn-gold" href="#register">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main id="home" class="hero">
+    <div class="hero-bg"></div>
+
+    <div class="container">
+      <div class="hero-grid">
+
+        <!-- LEFT: Title like screenshot -->
+        <div class="stack-18">
+          <h1 class="hero-title">
+            ORGANIZE &amp; COMPETE IN<br />
+            <span class="grad">CS2 TOURNAMENTS</span>
+          </h1>
+
+          <p class="hero-sub">
+            Create and join premium eSports tournaments with secure entry fees,
+            fast brackets, and pro-grade match management.
+          </p>
+
+          <div class="hero-cta">
+            <a class="btn btn-violet" href="#tournaments">Browse Tournaments</a>
+            <a class="btn btn-gold" href="#register">Register Team</a>
+          </div>
+        </div>
+
+        <!-- RIGHT: mini neon card -->
+        <div class="neon-wrap premium-hover sheen hero-side">
+          <div class="stack-14">
+            <div class="stack-10">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+                <div style="font-weight:900;color:rgba(255,255,255,0.92);">Live Platform</div>
+                <div class="pill"><span class="online"><span class="g"></span> Online</span></div>
+              </div>
+              <div style="color:rgba(255,255,255,0.72);font-size:13px;line-height:1.6;">
+                Fast registration, secure payments, and automated brackets for CS2 events.
+              </div>
+            </div>
+
+            <div class="kpi">
+              <div class="box">
+                <div class="n">16+</div>
+                <div class="t">Teams per Cup</div>
+              </div>
+              <div class="box">
+                <div class="n">24/7</div>
+                <div class="t">Support</div>
+              </div>
+              <div class="box">
+                <div class="n">$500K</div>
+                <div class="t">Prize Pool</div>
+              </div>
+              <div class="box">
+                <div class="n">Anti-cheat</div>
+                <div class="t">Verified matches</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Banner like screenshot -->
+      <div class="neon-wrap premium-hover sheen banner" style="margin-top:22px;">
+        <div class="banner-grid">
+          <div>
+            <h2>Global Esports Championship</h2>
+            <div class="prize">$500,000</div>
+            <div class="banner-meta">
+              <span class="dot"></span> 16 Teams
+              <span class="dot"></span> CS2
+              <span class="dot"></span> May 15–21, 2026
+            </div>
+          </div>
+
+          <div class="banner-actions">
+            <a class="btn btn-gold" href="#payment">Register Now</a>
+            <a class="btn btn-violet" href="#create">Create Tournament</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURES like screenshot -->
+      <div class="features">
+        <div class="neon-wrap premium-hover sheen feature">
+          <div class="icon">
+            <!-- bracket icon -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 4h3v6H7a3 3 0 0 1-3-3V4h3ZM7 20h3v-6H7a3 3 0 0 0-3 3v3h3Z" stroke="rgba(255,217,138,0.92)" stroke-width="1.6"/>
+              <path d="M17 4h-3v6h3a3 3 0 0 0 3-3V4h-3ZM17 20h-3v-6h3a3 3 0 0 1 3 3v3h-3Z" stroke="rgba(255,217,138,0.92)" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <h3>Easy Management</h3>
+          <p>Create and manage brackets, lobbies, and match results in one dashboard.</p>
+        </div>
+
+        <div class="neon-wrap premium-hover sheen feature">
+          <div class="icon">
+            <!-- shield icon -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l8 4v7c0 5-3.4 9-8 9s-8-4-8-9V6l8-4Z" stroke="rgba(255,217,138,0.92)" stroke-width="1.6"/>
+              <path d="M9.5 12.2l1.8 1.8 3.8-4.2" stroke="rgba(255,217,138,0.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Secure Payments</h3>
+          <p>Collect entry fees, automate payouts, and track transactions safely.</p>
+        </div>
+
+        <div class="neon-wrap premium-hover sheen feature">
+          <div class="icon">
+            <!-- headset icon -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 12a8 8 0 0 1 16 0v6a2 2 0 0 1-2 2h-2v-6h4" stroke="rgba(255,217,138,0.92)" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M4 12v6a2 2 0 0 0 2 2h2v-6H4" stroke="rgba(255,217,138,0.92)" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>24/7 Support</h3>
+          <p>We help with disputes, scheduling, and tournament setup anytime.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- UPCOMING TOURNAMENTS -->
+  <section id="tournaments">
+    <div class="container">
+      <h2 class="section-title">Upcoming Tournaments</h2>
+      <p class="section-sub">
+        Join weekly cups, seasonal leagues, and premium championships. Hover cards for a premium eSports feel.
+      </p>
+
+      <div class="cards">
+        <article class="card neon-wrap premium-hover sheen">
+          <div class="thumb"></div>
+          <div class="content">
+            <h4>Global Esports Championship</h4>
+            <div class="meta">
+              <div class="row"><span>Date</span><span class="pill">May 15–21, 2026</span></div>
+              <div class="row"><span>Teams</span><span class="pill">16 Teams</span></div>
+              <div class="row"><span>Status</span><span class="pill"><span class="online"><span class="g"></span> Online</span></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card neon-wrap premium-hover sheen">
+          <div class="thumb"></div>
+          <div class="content">
+            <h4>Inferno Open</h4>
+            <div class="meta">
+              <div class="row"><span>Date</span><span class="pill">Apr 26–31, 2026</span></div>
+              <div class="row"><span>Teams</span><span class="pill">32 Teams</span></div>
+              <div class="row"><span>Status</span><span class="pill"><span class="online"><span class="g"></span> Online</span></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card neon-wrap premium-hover sheen">
+          <div class="thumb"></div>
+          <div class="content">
+            <h4>Verdant Cup</h4>
+            <div class="meta">
+              <div class="row"><span>Date</span><span class="pill">May 3–5, 2026</span></div>
+              <div class="row"><span>Teams</span><span class="pill">16 Teams</span></div>
+              <div class="row"><span>Status</span><span class="pill"><span class="online"><span class="g"></span> Online</span></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card neon-wrap premium-hover sheen">
+          <div class="thumb"></div>
+          <div class="content">
+            <h4>City Clash</h4>
+            <div class="meta">
+              <div class="row"><span>Date</span><span class="pill">May 3–10, 2026</span></div>
+              <div class="row"><span>Teams</span><span class="pill">24 Teams</span></div>
+              <div class="row"><span>Status</span><span class="pill"><span class="online"><span class="g"></span> Online</span></span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="section-actions">
+        <a class="btn btn-gold" href="#tournaments">Browse All Tournaments</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAYMENT + REGISTRATION -->
+  <section id="register">
+    <div class="container">
+      <h2 class="section-title">Registration & Payment</h2>
+      <p class="section-sub">
+        Premium checkout block + tournament registration form. Это уже готовая база под Stripe / PayPal / крипту.
+      </p>
+
+      <div class="pay-grid">
+        <!-- PAYMENT BLOCK -->
+        <div id="payment" class="neon-wrap premium-hover sheen pay-card">
+          <div class="pay-title">
+            <h3>Entry Fee Payment</h3>
+            <span class="secure-badge"><span class="lock"></span> Secure Checkout</span>
+          </div>
+
+          <div class="pay-options">
+            <div class="option">
+              <div class="left">
+                <div class="logo-mini">VISA</div>
+                <div class="name">
+                  <b>Card Payment</b>
+                  <span>Instant confirmation • 3D Secure</span>
+                </div>
+              </div>
+              <div class="price">$10</div>
+            </div>
+
+            <div class="option">
+              <div class="left">
+                <div class="logo-mini">PP</div>
+                <div class="name">
+                  <b>PayPal</b>
+                  <span>Fast checkout • Buyer protection</span>
+                </div>
+              </div>
+              <div class="price">$10</div>
+            </div>
+
+            <div class="option">
+              <div class="left">
+                <div class="logo-mini">USDT</div>
+                <div class="name">
+                  <b>Crypto</b>
+                  <span>USDT / BTC • Auto-verification</span>
+                </div>
+              </div>
+              <div class="price">$10</div>
+            </div>
+          </div>
+
+          <p class="pay-note">
+            После успешной оплаты ты обычно получаешь <b>webhook / callback</b> от платёжки (Stripe/PayPal),
+            и уже по нему автоматически подтверждаешь команду и добавляешь в турнир.
+          </p>
+
+          <div class="divider"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+            <div class="tiny">
+              Demo UI (без реальной оплаты). Подключишь API — и будет работать.
+            </div>
+            <button class="btn btn-gold" type="button">Pay & Confirm</button>
+          </div>
+        </div>
+
+        <!-- REGISTRATION FORM -->
+        <div class="neon-wrap premium-hover sheen form-card">
+          <div class="form-title">
+            <h3>Register Your Team</h3>
+            <p>Fill details • get a slot</p>
+          </div>
+
+          <form>
+            <div class="grid-2">
+              <div class="field">
+                <label for="team">Team Name</label>
+                <input id="team" placeholder="e.g. Golden Aces" />
+              </div>
+              <div class="field">
+                <label for="captain">Captain Nick</label>
+                <input id="captain" placeholder="e.g. MykolaPro" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="captain@email.com" />
+              </div>
+              <div class="field">
+                <label for="region">Region</label>
+                <select id="region">
+                  <option>EU</option>
+                  <option>NA</option>
+                  <option>ASIA</option>
+                  <option>ME</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="tournament">Tournament</label>
+                <select id="tournament">
+                  <option>Global Esports Championship</option>
+                  <option>Inferno Open</option>
+                  <option>Verdant Cup</option>
+                  <option>City Clash</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="players">Players</label>
+                <select id="players">
+                  <option>5 (Standard)</option>
+                  <option>6 (1 Substitute)</option>
+                  <option>7 (2 Substitutes)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <span class="tiny">
+                By registering you agree to fair play rules & anti-cheat checks.
+              </span>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-ghost" type="reset">Reset</button>
+                <button class="btn btn-violet" type="button">Submit Registration</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="divider"></div>
+
+          <div class="tiny">
+            Хочешь, чтобы после оплаты автоматом создавалась запись участника?
+            Тогда подключаем Stripe/PayPal webhooks и сохраняем оплату + регистрацию в базе.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="about">
+    <div class="container">
+      <div class="footer-grid">
+        <div>© 2026 CS2 Tournaments. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#about">About</a>
+          <a href="#news">Contact</a>
+          <a href="#support">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
