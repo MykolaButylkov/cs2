@@ -148,7 +148,7 @@
 }
 
 /* Responsive behavior */
-@media (max-width: 1160px){
+@media (max-width: 860px){
   .nav, .auth{
     display: none;
   }
@@ -218,7 +218,7 @@
     justify-content: center;
 }
 
-@media (max-width: 1160px) {
+@media (max-width: 860px) {
   .hero-section {
     background-image: url("../img/hero-img-mobile.png");
     min-height: 65vh;
@@ -233,7 +233,7 @@
     text-align: center
 }
 
-@media (max-width: 1160px) {
+@media (max-width: 860px) {
   .hero-section_title {
     font-size: 30px;
     position: absolute;
@@ -256,7 +256,7 @@
     
 }
 
-@media (max-width: 1160px) {
+@media (max-width: 860px) {
     .hero-section_btn {
          position: absolute;
     top: 200px;
@@ -270,9 +270,15 @@
     min-height: 100vh;
     /* всегда на весь экран */
        background-image: url("../img/hero-people-img-2.png");
-    background-size: contain;
+    background-size: cover;
     /* ВАЖНО */
     background-repeat: no-repeat;
     align-items: center;
     justify-content: center;
+}
+@media (max-width: 860px) {
+    .amount-section  {
+        min-height: 37vh;
+
+    }
 }
