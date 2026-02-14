@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up — CS2 Tournaments</title>
   <link rel="stylesheet" href="styles/style.css" />
+  <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
+
 </head>
 
 <body>
@@ -111,10 +113,32 @@
               </div>
             </div>
 
-            <div class="field">
-              <label for="regEmail">Email</label>
-              <input id="regEmail" name="email" type="email" placeholder="you@email.com" required />
+            <div class="grid-2">
+              <div class="field">
+                <label for="regEmail">Email</label>
+                <input id="regEmail" name="email" type="email" placeholder="you@email.com" autocomplete="email"
+                  required />
+              </div>
+
+              <div class="field">
+                <label for="phoneIL">Phone number</label>
+
+                <div class="phone-il">
+                  <span class="phone-il__prefix">🇮🇱 +972</span>
+
+                  <input id="phoneIL" class="phone-il__input" type="tel" inputmode="numeric" autocomplete="tel-national"
+                    placeholder="0501234567" maxlength="10" required />
+                </div>
+
+                <!-- Это поле будет отправляться в формате +972XXXXXXXXX -->
+                <input type="hidden" name="phone" id="phoneFull">
+
+                <div class="field-hint tiny">
+                  Enter Israeli mobile number (0501234567)
+                </div>
+              </div>
             </div>
+
 
             <div class="grid-2">
               <div class="field">
