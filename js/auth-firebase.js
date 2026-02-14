@@ -153,32 +153,34 @@ function hide(el){ if (el) el.style.display = "none"; }
   });
 
   // SEND SMS (привязываем к текущему email-аккаунту)
-  smsSendBtn?.addEventListener("click", async () => {
-    try {
-      const u = auth.currentUser;
-      if (!u){
-        alert("No active user session. Please register again.");
-        return;
-      }
+smsSendBtn?.addEventListener("click", async () => {
+  try {
+    const phoneRaw = byId("phoneIL")?.value;
+    const phoneCheck = normalizeILMobileToE164(phoneRaw);
 
-      const phoneRaw = byId("phoneIL")?.value;
-      const phoneCheck = normalizeILMobileToE164(phoneRaw);
-      if (!phoneCheck.ok){
-        alert(phoneCheck.reason);
-        return;
-      }
-
-      const verifier = await ensureRecaptcha();
-
-      // ✅ ВАЖНО: linkWithPhoneNumber, а не signInWithPhoneNumber
-      confirmationResult = await linkWithPhoneNumber(u, phoneCheck.e164, verifier);
-
-      alert("SMS sent. Enter the code.");
-    } catch (err) {
-      console.error(err);
-      alert(err?.message || "SMS send error");
+    if (!phoneCheck.ok){
+      alert(phoneCheck.reason);
+      return;
     }
-  });
+
+    console.log("PHONE E164 =>", phoneCheck.e164); // ✅ ВОТ ЗДЕСЬ
+
+    ensureRecaptcha();
+
+    confirmationResult = await signInWithPhoneNumber(
+      auth,
+      phoneCheck.e164,
+      recaptcha
+    );
+
+    alert("SMS sent. Enter the code.");
+
+  } catch (err) {
+    console.error("SMS ERROR:", err);
+    alert(err?.message || "SMS send error");
+  }
+});
+
 
   // VERIFY SMS + SAVE PROFILE
   smsVerifyBtn?.addEventListener("click", async () => {
