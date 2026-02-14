@@ -102,7 +102,7 @@
             <p class="tiny">Access your dashboard</p>
           </div>
 
-          <form class="auth-form" action="#" method="post">
+          <form class="auth-form" action="#" method="post" data-login-form>
             <div class="field">
               <label for="loginEmail">Email</label>
               <input id="loginEmail" name="username" type="email" autocomplete="username" required />
@@ -110,8 +110,8 @@
 
             <div class="field">
               <label for="loginPass">Password</label>
-              <input id="loginPass" name="login_password" type="password" autocomplete="new-password" autocorrect="off"
-                autocapitalize="off" spellcheck="false" required />
+              <input id="loginPass" name="login_password" type="password" autocomplete="current-password"
+                autocorrect="off" autocapitalize="off" spellcheck="false" required />
             </div>
 
             <div class="auth-row">
@@ -132,6 +132,7 @@
               <a class="auth-link" href="register.html">Create one</a>
             </div>
           </form>
+
         </section>
       </div>
     </div>
@@ -150,6 +151,7 @@
     </div>
   </footer>
 
+  <script src="js/auth.js"></script>
   <script src="js/burger-menu.js"></script>
 </body>
 
