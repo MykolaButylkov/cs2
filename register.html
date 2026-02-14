@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — CS2 Tournaments</title>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+
+        <a class="brand" href="index.html#home" aria-label="CS2 Tournaments Home">
+          <span class="brand-badge" aria-hidden="true"><span></span></span>
+          <span>CS2 TOURNAMENTS</span>
+        </a>
+
+        <nav class="nav-desktop" aria-label="Primary">
+          <a href="index.html#home">Home</a>
+          <a href="index.html#tournaments">Tournaments</a>
+          <a href="index.html#news">News</a>
+          <a href="index.html#about">About</a>
+        </nav>
+
+        <div class="header-actions header-actions-desktop">
+          <a class="btn btn-ghost" href="./login.html">Log in</a>
+          <a class="btn btn-gold" href="./register.html">Sign Up</a>
+        </div>
+
+        <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu__panel neon-wrap sheen">
+      <div class="mobile-menu__top">
+        <a class="brand" href="index.html#home" aria-label="CS2 Tournaments Home">
+          <span class="brand-badge" aria-hidden="true"><span></span></span>
+          <span>CS2 TOURNAMENTS</span>
+        </a>
+        <button class="mobile-close" type="button" aria-label="Close menu">✕</button>
+      </div>
+
+      <div class="mobile-menu__links" aria-label="Mobile">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#tournaments">Tournaments</a>
+        <a href="index.html#news">News</a>
+        <a href="index.html#about">About</a>
+      </div>
+
+      <div class="mobile-menu__actions">
+        <a class="btn btn-ghost" href="login.html">Log in</a>
+        <a class="btn btn-gold" href="register.html">Sign Up</a>
+      </div>
+
+      <div class="mobile-menu__bottom tiny">
+        Premium CS2 cups • Secure payments • Anti-cheat
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE -->
+  <main class="auth-page">
+    <div class="container">
+      <div class="auth-grid">
+        <!-- Left promo -->
+        <section class="neon-wrap sheen auth-promo">
+          <div class="auth-promo__inner">
+            <h1 class="auth-title">Create your account</h1>
+            <p class="auth-sub">
+              Sign up to register teams, pay entry fees, and get instant confirmations.
+            </p>
+
+            <div class="auth-badges">
+              <div class="auth-badge"><span class="dot"></span> Email verification</div>
+              <div class="auth-badge"><span class="dot"></span> Secure payments</div>
+              <div class="auth-badge"><span class="dot"></span> Tournament dashboard</div>
+            </div>
+
+            <div class="auth-promo__hint tiny">
+              After sign up you can connect a team and join tournaments.
+            </div>
+          </div>
+        </section>
+
+        <!-- Right form -->
+        <section class="neon-wrap premium-hover sheen auth-card">
+          <div class="auth-card__top">
+            <h2>Sign Up</h2>
+            <p class="tiny">Create account in 30 seconds</p>
+          </div>
+
+          <form class="auth-form" action="#" method="post">
+            <div class="grid-2">
+              <div class="field">
+                <label for="firstName">First name</label>
+                <input id="firstName" name="firstName" placeholder="Mykola" required />
+              </div>
+              <div class="field">
+                <label for="nick">Nickname</label>
+                <input id="nick" name="nick" placeholder="MykolaPro" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="regEmail">Email</label>
+              <input id="regEmail" name="email" type="email" placeholder="you@email.com" required />
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="regPass">Password</label>
+                <input id="regPass" name="new-password" type="password" placeholder="••••••••"
+                  autocomplete="new-password" autocapitalize="off" spellcheck="false" required />
+              </div>
+              <div class="field">
+                <label for="regPass2">Confirm</label>
+                <input id="regPass2" name="new-password-confirm" type="password" placeholder="••••••••"
+                  autocomplete="new-password" autocapitalize="off" spellcheck="false" required />
+              </div>
+            </div>
+
+            <label class="auth-check">
+              <input type="checkbox" required />
+              <span>I agree to the rules & fair play policy</span>
+            </label>
+
+            <button class="btn btn-gold auth-submit" type="submit">Create account</button>
+
+            <div class="divider"></div>
+
+            <div class="tiny auth-bottom">
+              Already have an account?
+              <a class="auth-link" href="login.html">Log in</a>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>© 2026 CS2 Tournaments. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="index.html#about">About</a>
+          <a href="index.html#news">Contact</a>
+          <a href="index.html#support">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/burger-menu.js"></script>
+</body>
+
+</html>
