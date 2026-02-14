@@ -1102,3 +1102,9 @@ input:focus, select:focus{
 @media (max-width: 520px){
   .phone-il__prefix{ min-width: 108px; }
 }
+#recaptcha-container{
+  margin-top: 10px;
+  transform: scale(.92);
+  transform-origin: left top;
+  filter: saturate(.9);
+}

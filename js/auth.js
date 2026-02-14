@@ -1,3 +1,7 @@
+/* =========================
+   Phone formatter (+972)
+   ========================= */
+
 const phoneInput = document.getElementById("phoneIL");
 const phoneFull = document.getElementById("phoneFull");
 
@@ -53,7 +57,7 @@ function getSession(){ return localStorage.getItem(LS_SESSION); }
 function clearSession(){ localStorage.removeItem(LS_SESSION); }
 
 function findUserByEmail(email){
-  return getUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
+  return getUsers().find(u => (u.email || "").toLowerCase() === String(email || "").toLowerCase());
 }
 function findUserById(id){
   return getUsers().find(u => u.id === id);
@@ -74,6 +78,44 @@ function formatILPhoneToE164(raw){
   return "+972" + digits;
 }
 
+/* =========================
+   Validation helpers
+   ========================= */
+
+function isValidEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(String(email || "").trim());
+}
+
+// Валидация IL мобильного: 05Xxxxxxxx (10 цифр) или 5xxxxxxxx (9 цифр), -> +9725xxxxxxxx
+function normalizeILMobile(raw){
+  let digits = String(raw || "").replace(/\D/g, "");
+  if (!digits) return { ok:false, e164:"", reason:"Phone is empty" };
+
+  // 10 цифр с нулем: 05XXXXXXXX -> убираем 0 => 5XXXXXXXX (9 цифр)
+  if (digits.length === 10 && digits.startsWith("0")) digits = digits.slice(1);
+
+  // должно стать 9 цифр и начинаться с 5
+  if (!(digits.length === 9 && digits.startsWith("5"))){
+    return { ok:false, e164:"", reason:"Enter Israeli mobile like 0501234567" };
+  }
+
+  // префикс 50-59
+  const prefix = digits.slice(0,2);
+  const allowed = ["50","51","52","53","54","55","56","57","58","59"];
+  if (!allowed.includes(prefix)){
+    return { ok:false, e164:"", reason:"Phone must be Israeli mobile (05X...)" };
+  }
+
+  return { ok:true, e164: "+972" + digits, reason:"" };
+}
+
+function phoneAlreadyUsed(phoneE164){
+  const target = String(phoneE164 || "").trim();
+  if (!target) return false;
+  return getUsers().some(u => String(u.phone || "").trim() === target);
+}
+
+
 /* ===== Register page ===== */
 (async function initRegister(){
   const form = document.querySelector("[data-register-form]");
@@ -83,34 +125,72 @@ function formatILPhoneToE164(raw){
     e.preventDefault();
 
     // ✅ под твою форму:
-    const name = document.getElementById("firstName")?.value.trim(); // было regName
-    const nick = document.getElementById("nick")?.value.trim();      // было regNick
+    const name = document.getElementById("firstName")?.value.trim();
+    const nick = document.getElementById("nick")?.value.trim();
     const email = document.getElementById("regEmail")?.value.trim();
     const pass = document.getElementById("regPass")?.value;
     const pass2 = document.getElementById("regPass2")?.value;
 
-    // телефон: предпочитаем скрытое поле +972..., но подстрахуемся
+    // турнир (если на странице нет select — будет undefined)
+    const tournament = document.getElementById("regTournament")?.value;
+
+    // телефон: скрытое поле +972..., но подстрахуемся
+    // ВАЖНО: принудительно сформируем phoneFull перед чтением (если автозаполнение)
+    fillPhoneFull();
     const phoneHidden = document.getElementById("phoneFull")?.value?.trim();
     const phoneRaw = document.getElementById("phoneIL")?.value;
 
-    const tournament = document.getElementById("regTournament")?.value; // добавлено в register.html
-
-    // если phoneFull не заполнен (например, не было input события) — соберём вручную
-    const phone = phoneHidden || formatILPhoneToE164(phoneRaw);
-
-    if (!name || !nick || !email || !pass || !pass2 || !phone || !tournament){
+    // 1) заполненность
+    if (!name || !nick || !email || !pass || !pass2 || !phoneRaw){
       alert("Please fill all fields.");
       return;
     }
+
+    // 2) email формат
+    if (!isValidEmail(email)){
+      alert("Please enter a valid email.");
+      document.getElementById("regEmail")?.focus();
+      return;
+    }
+
+    // 3) телефон строгий IL mobile -> +9725xxxxxxxx
+    const phoneCheck = normalizeILMobile(phoneHidden || phoneRaw);
+    if (!phoneCheck.ok){
+      alert(phoneCheck.reason);
+      document.getElementById("phoneIL")?.focus();
+      return;
+    }
+    const phone = phoneCheck.e164;
+
+    // 4) пароль = подтверждение
     if (pass !== pass2){
       alert("Passwords do not match.");
       return;
     }
+
+    // 5) уникальность email
     if (findUserByEmail(email)){
       alert("Email already registered. Please log in.");
       window.location.href = "login.html";
       return;
     }
+
+    // 6) уникальность телефона
+    if (phoneAlreadyUsed(phone)){
+      alert("Phone number already registered. Please log in.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    // 7) турнир (если у тебя он обязателен — включи проверку)
+    // Сейчас оставляю мягко: если нет элемента regTournament — не ломаем регистрацию
+    // Если хочешь строго обязательно — раскомментируй блок ниже.
+    /*
+    if (!tournament){
+      alert("Please select a tournament.");
+      return;
+    }
+    */
 
     const passwordHash = await hashPassword(pass);
 
@@ -119,8 +199,8 @@ function formatILPhoneToE164(raw){
       name,
       nick,
       email,
-      phone,
-      tournament,
+      phone,            // всегда +9725xxxxxxxx
+      tournament: tournament || "", // не ломаем, если поля нет
       createdAt: new Date().toISOString(),
       passwordHash,
       paymentStatus: "UNPAID" // later
@@ -135,6 +215,7 @@ function formatILPhoneToE164(raw){
   });
 })();
 
+
 /* ===== Login page ===== */
 (async function initLogin(){
   const form = document.querySelector("[data-login-form]");
@@ -148,6 +229,13 @@ function formatILPhoneToE164(raw){
 
     if (!email || !pass){
       alert("Enter email and password.");
+      return;
+    }
+
+    // доп. проверка email формата (чтобы не было мусора)
+    if (!isValidEmail(email)){
+      alert("Please enter a valid email.");
+      document.getElementById("loginEmail")?.focus();
       return;
     }
 
@@ -169,6 +257,7 @@ function formatILPhoneToE164(raw){
   });
 })();
 
+
 /* ===== Dashboard page ===== */
 (function initDashboard(){
   const nickEl = document.getElementById("uNick");
@@ -187,12 +276,12 @@ function formatILPhoneToE164(raw){
     return;
   }
 
-  document.getElementById("uName").textContent = user.name;
-  document.getElementById("uNickname").textContent = user.nick;
-  document.getElementById("uEmail").textContent = user.email;
-  document.getElementById("uPhone").textContent = user.phone;
-  document.getElementById("uTournament").textContent = user.tournament;
-  nickEl.textContent = user.nick;
+  document.getElementById("uName").textContent = user.name || "—";
+  document.getElementById("uNickname").textContent = user.nick || "—";
+  document.getElementById("uEmail").textContent = user.email || "—";
+  document.getElementById("uPhone").textContent = user.phone || "—";
+  document.getElementById("uTournament").textContent = user.tournament || "—";
+  nickEl.textContent = user.nick || "Player";
 
   const logout = () => {
     clearSession();
