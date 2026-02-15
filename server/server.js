@@ -1,4 +1,5 @@
 // server.js
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -12,35 +13,51 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// ✅ CORS под твой фронт (Live Server на 5500)
+/* =========================
+   ✅ CORS (исправленный)
+========================= */
+
+const allowlist = new Set([
+  "http://127.0.0.1:5500",
+  "http://localhost:5500",
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "https://mykolabutylkov.github.io",
+]);
+
+function normalizeOrigin(origin) {
+  return String(origin || "").replace(/\/$/, "");
+}
+
 app.use(
   cors({
-    origin: (origin, cb) => {
-      const allowlist = new Set([
-        "http://127.0.0.1:5500",
-        "http://localhost:5500",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://mykolabutylkov.github.io",
-      ]);
-
-      // запросы без origin (curl, postman) — разрешаем
+    origin(origin, cb) {
       if (!origin) return cb(null, true);
 
-      if (allowlist.has(origin)) return cb(null, true);
+      const o = normalizeOrigin(origin);
 
-      // если хочешь вообще "всё разрешить" на время — раскомментируй:
-      // return cb(null, true);
+      // разрешаем любой github.io
+      if (o.endsWith(".github.io")) return cb(null, true);
 
-      return cb(new Error("CORS blocked: " + origin));
+      if (allowlist.has(o)) return cb(null, true);
+
+      console.log("CORS BLOCKED ORIGIN:", o);
+      return cb(null, false);
     },
     credentials: false,
   })
 );
 
+// preflight
+app.options("*", cors());
+
+/* =========================
+   ENV
+========================= */
+
 function requireEnv(name) {
   const v = process.env[name];
-  if (!v) throw new Error(`${name} is missing in .env`);
+  if (!v) throw new Error(`${name} is missing in environment variables`);
   return v;
 }
 
@@ -52,9 +69,13 @@ const JWT_SECRET = requireEnv("JWT_SECRET");
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const dbPromise = initDB();
 
+/* =========================
+   Helpers
+========================= */
+
 function signToken(user) {
   return jwt.sign(
-    { sub: user.id }, // user id
+    { sub: user.id },
     JWT_SECRET,
     { expiresIn: "7d" }
   );
@@ -66,7 +87,8 @@ function authRequired(req, res, next) {
     const parts = header.split(" ");
     const token = parts.length === 2 ? parts[1] : null;
 
-    if (!token) return res.status(401).json({ ok: false, error: "No token" });
+    if (!token)
+      return res.status(401).json({ ok: false, error: "No token" });
 
     const payload = jwt.verify(token, JWT_SECRET);
     req.userId = payload.sub;
@@ -81,22 +103,33 @@ function normEmail(email) {
 }
 
 function normPhone(phone) {
-  // ожидаем E.164: +972XXXXXXXXX
   return String(phone || "").trim();
 }
 
-app.get("/api/health", (req, res) => res.json({ ok: true }));
+/* =========================
+   Routes
+========================= */
 
-// 1) SEND SMS
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true });
+});
+
+/* ===== 1) SEND SMS ===== */
+
 app.post("/api/sms/send", async (req, res) => {
   try {
     const { phone } = req.body || {};
     const phoneNorm = normPhone(phone);
-    if (!phoneNorm) return res.status(400).json({ ok: false, error: "Phone required" });
+
+    if (!phoneNorm)
+      return res.status(400).json({ ok: false, error: "Phone required" });
 
     await client.verify.v2
       .services(TWILIO_VERIFY_SID)
-      .verifications.create({ to: phoneNorm, channel: "sms" });
+      .verifications.create({
+        to: phoneNorm,
+        channel: "sms",
+      });
 
     res.json({ ok: true });
   } catch (err) {
@@ -105,7 +138,8 @@ app.post("/api/sms/send", async (req, res) => {
   }
 });
 
-// 2) VERIFY SMS
+/* ===== 2) VERIFY SMS ===== */
+
 app.post("/api/sms/verify", async (req, res) => {
   try {
     const { phone, code } = req.body || {};
@@ -113,12 +147,17 @@ app.post("/api/sms/verify", async (req, res) => {
     const codeNorm = String(code || "").trim();
 
     if (!phoneNorm || !codeNorm) {
-      return res.status(400).json({ ok: false, error: "Phone and code required" });
+      return res
+        .status(400)
+        .json({ ok: false, error: "Phone and code required" });
     }
 
     const check = await client.verify.v2
       .services(TWILIO_VERIFY_SID)
-      .verificationChecks.create({ to: phoneNorm, code: codeNorm });
+      .verificationChecks.create({
+        to: phoneNorm,
+        code: codeNorm,
+      });
 
     if (check.status !== "approved") {
       return res.status(400).json({ ok: false, error: "Invalid code" });
@@ -131,13 +170,17 @@ app.post("/api/sms/verify", async (req, res) => {
   }
 });
 
-// 3) REGISTER -> создаём юзера + сразу отдаём token + user
+/* ===== 3) REGISTER ===== */
+
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const { firstName, nick, email, phone, tournament, password } = req.body || {};
+    const { firstName, nick, email, phone, tournament, password } =
+      req.body || {};
 
     if (!firstName || !nick || !email || !phone || !tournament || !password) {
-      return res.status(400).json({ ok: false, error: "Missing required fields" });
+      return res
+        .status(400)
+        .json({ ok: false, error: "Missing required fields" });
     }
 
     const db = await dbPromise;
@@ -150,15 +193,19 @@ app.post("/api/auth/register", async (req, res) => {
       emailNorm,
       phoneNorm
     );
+
     if (existing) {
-      return res.status(409).json({ ok: false, error: "User already exists (email/phone)" });
+      return res
+        .status(409)
+        .json({ ok: false, error: "User already exists (email/phone)" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
     const result = await db.run(
-      `INSERT INTO users (firstName, nick, email, phone, tournament, passwordHash, phoneVerified)
-       VALUES (?, ?, ?, ?, ?, ?, 1)`,
+      `INSERT INTO users 
+      (firstName, nick, email, phone, tournament, passwordHash, phoneVerified)
+      VALUES (?, ?, ?, ?, ?, ?, 1)`,
       String(firstName).trim(),
       String(nick).trim(),
       emailNorm,
@@ -182,12 +229,16 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
-// 4) LOGIN -> token + user
+/* ===== 4) LOGIN ===== */
+
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body || {};
+
     if (!email || !password) {
-      return res.status(400).json({ ok: false, error: "Email and password required" });
+      return res
+        .status(400)
+        .json({ ok: false, error: "Email and password required" });
     }
 
     const db = await dbPromise;
@@ -199,10 +250,13 @@ app.post("/api/auth/login", async (req, res) => {
       emailNorm
     );
 
-    if (!userRow) return res.status(401).json({ ok: false, error: "Invalid credentials" });
+    if (!userRow)
+      return res.status(401).json({ ok: false, error: "Invalid credentials" });
 
     const okPass = await bcrypt.compare(password, userRow.passwordHash);
-    if (!okPass) return res.status(401).json({ ok: false, error: "Invalid credentials" });
+
+    if (!okPass)
+      return res.status(401).json({ ok: false, error: "Invalid credentials" });
 
     const user = {
       id: userRow.id,
@@ -224,7 +278,8 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// 5) ME -> получить текущего юзера по токену
+/* ===== 5) ME ===== */
+
 app.get("/api/auth/me", authRequired, async (req, res) => {
   try {
     const db = await dbPromise;
@@ -235,7 +290,8 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
       req.userId
     );
 
-    if (!user) return res.status(404).json({ ok: false, error: "User not found" });
+    if (!user)
+      return res.status(404).json({ ok: false, error: "User not found" });
 
     res.json({ ok: true, user });
   } catch (err) {
@@ -244,6 +300,12 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Server running on http://localhost:" + (process.env.PORT || 3000));
+/* =========================
+   START SERVER
+========================= */
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
