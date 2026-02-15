@@ -21,6 +21,7 @@ app.use(
         "http://localhost:5500",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://mykolabutylkov.github.io",
       ]);
 
       // запросы без origin (curl, postman) — разрешаем
