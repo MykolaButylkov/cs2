@@ -41,7 +41,7 @@ async function adminLogin(username, password) {
   const res = await fetch(`${API_BASE}/api/admin/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ login: username, password }), // ✅ ВАЖНО: login, а не username
   });
 
   const data = await res.json().catch(() => null);
