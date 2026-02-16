@@ -1,5 +1,11 @@
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
+async function ensureColumn(db, columnName, definition) {
+  const columns = await db.all(`PRAGMA table_info(users)`);
+  const exists = columns.some(c => c.name === columnName);
+  if (!exists) {
+    await db.exec(`ALTER TABLE users ADD COLUMN ${columnName} ${definition}`);
+    console.log(`Column added: ${columnName}`);
+  }
+}
 
 export async function initDB() {
   const db = await open({
@@ -20,6 +26,10 @@ export async function initDB() {
       createdAt TEXT DEFAULT (datetime('now'))
     );
   `);
+
+  await ensureColumn(db, "paid", "INTEGER DEFAULT 0");
+  await ensureColumn(db, "paidAt", "TEXT");
+  await ensureColumn(db, "paymentRef", "TEXT");
 
   return db;
 }

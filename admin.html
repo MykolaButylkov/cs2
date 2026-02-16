@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — CS2 Tournaments</title>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a class="brand" href="index.html#home">
+        <span class="brand-badge"><span></span></span>
+        <span>CS2 TOURNAMENTS</span>
+      </a>
+
+      <div class="header-actions header-actions-desktop">
+        <button class="btn btn-ghost" id="adminLogout" type="button">Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="auth-page">
+  <div class="container">
+    <div class="neon-wrap sheen" style="padding:22px;">
+      <h1 class="hero-title" style="margin:0;font-size:28px;">Admin Panel</h1>
+      <p class="hero-sub" style="margin:10px 0 0;">Players list, phone & payment statuses</p>
+
+      <div class="divider"></div>
+
+      <!-- Login box -->
+      <section id="adminLoginBox" class="neon-wrap sheen" style="padding:18px;max-width:520px;">
+        <h3 style="margin:0 0 10px;">Admin login</h3>
+
+        <form id="adminLoginForm" class="auth-form" action="javascript:void(0)">
+          <div class="field">
+            <label>Username</label>
+            <input id="adminUser" autocomplete="username" required />
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <input id="adminPass" type="password" autocomplete="current-password" required />
+          </div>
+          <button class="btn btn-gold" type="submit">Sign in</button>
+        </form>
+      </section>
+
+      <!-- Table box -->
+      <section id="adminTableBox" style="display:none;">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-ghost" id="refreshUsers" type="button">Refresh</button>
+          <span class="pill" id="usersCount">0 users</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="overflow:auto;">
+          <table style="width:100%;border-collapse:collapse;min-width:900px;">
+            <thead>
+              <tr style="text-align:left;">
+                <th class="tiny" style="padding:10px;">ID</th>
+                <th class="tiny" style="padding:10px;">Name</th>
+                <th class="tiny" style="padding:10px;">Nick</th>
+                <th class="tiny" style="padding:10px;">Email</th>
+                <th class="tiny" style="padding:10px;">Phone</th>
+                <th class="tiny" style="padding:10px;">Tournament</th>
+                <th class="tiny" style="padding:10px;">Phone verified</th>
+                <th class="tiny" style="padding:10px;">Paid</th>
+                <th class="tiny" style="padding:10px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="usersTbody"></tbody>
+          </table>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
