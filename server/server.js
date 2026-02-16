@@ -69,6 +69,17 @@ return cb(new Error("CORS blocked: " + o));
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+app.post("/api/admin/clear-users", adminRequired, async (req, res) => {
+  try {
+    const db = await dbPromise;
+    await db.exec("DELETE FROM users");
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: "Clear failed" });
+  }
+});
+
+
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
