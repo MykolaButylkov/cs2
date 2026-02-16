@@ -62,10 +62,10 @@ const corsOptions = {
 
     console.log("CORS BLOCKED ORIGIN:", o);
     // лучше вернуть false (без throw), чтобы preflight не ломался
-    return cb(null, false);
+return cb(new Error("CORS blocked: " + o));
   },
   credentials: false,
-  methods: ["GET", "POST", "OPTIONS"],
+  methods: ["GET", "POST", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
@@ -312,6 +312,8 @@ app.post("/api/admin/login", (req, res) => {
   res.json({ ok: true, token });
 });
 
+
+
 // List users (admin only)
 app.get("/api/admin/users", adminRequired, async (req, res) => {
   try {
@@ -367,6 +369,72 @@ app.post("/api/admin/user/:id/payment", adminRequired, async (req, res) => {
     res.status(500).json({ ok: false, error: "Admin payment update failed" });
   }
 });
+
+// ✅ UPDATE user (admin) — менять nick и email (телефон не меняем)
+app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
+  try {
+    const db = await dbPromise;
+    const id = Number(req.params.id);
+
+    const { nick, email } = req.body || {};
+
+    if (!id) return res.status(400).json({ ok: false, error: "Bad id" });
+
+    const updates = [];
+    const params = [];
+
+    if (nick !== undefined) {
+      const nickTrim = String(nick).trim();
+      if (!nickTrim) return res.status(400).json({ ok: false, error: "Nick required" });
+      updates.push("nick = ?");
+      params.push(nickTrim);
+    }
+
+    if (email !== undefined) {
+      const emailNorm = normEmail(email);
+      if (!emailNorm) return res.status(400).json({ ok: false, error: "Email required" });
+      updates.push("email = ?");
+      params.push(emailNorm);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ ok: false, error: "Nothing to update" });
+    }
+
+    // проверим, что юзер существует
+    const existingUser = await db.get(`SELECT id FROM users WHERE id = ?`, id);
+    if (!existingUser) return res.status(404).json({ ok: false, error: "User not found" });
+
+    // проверка уникальности email (если меняем)
+    if (email !== undefined) {
+      const emailNorm = normEmail(email);
+      const emailTaken = await db.get(
+        `SELECT id FROM users WHERE email = ? AND id <> ?`,
+        emailNorm,
+        id
+      );
+      if (emailTaken) {
+        return res.status(409).json({ ok: false, error: "Email already in use" });
+      }
+    }
+
+    // обновляем
+    params.push(id);
+    await db.run(`UPDATE users SET ${updates.join(", ")} WHERE id = ?`, params);
+
+    const user = await db.get(
+      `SELECT id, firstName, nick, email, phone, tournament, phoneVerified, paid, createdAt
+       FROM users WHERE id = ?`,
+      id
+    );
+
+    res.json({ ok: true, user });
+  } catch (e) {
+    console.error("ADMIN UPDATE USER ERROR:", e?.message || e);
+    res.status(500).json({ ok: false, error: "Update failed" });
+  }
+});
+
 
 /* =========================
    START SERVER (Render)

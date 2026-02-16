@@ -41,7 +41,7 @@ async function adminLogin(username, password) {
   const res = await fetch(`${API_BASE}/api/admin/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ login: username, password }), // ✅ ВАЖНО: login, а не username
+    body: JSON.stringify({ login: username, password }), // ✅ login
   });
 
   const data = await res.json().catch(() => null);
@@ -51,7 +51,11 @@ async function adminLogin(username, password) {
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, (m) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
   }[m]));
 }
 
@@ -62,6 +66,21 @@ function badgeYesNo(v, yesText = "Yes", noText = "No") {
     ? "border-color: rgba(62,255,180,.35);"
     : "border-color: rgba(255,120,120,.35);";
   return `<span class="pill" style="${style}">${esc(text)}</span>`;
+}
+
+async function adminUpdateUser(id, patch) {
+  const res = await fetch(`${API_BASE}/api/admin/users/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
+    body: JSON.stringify(patch),
+  });
+
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data?.ok) throw new Error(data?.error || "Update failed");
+  return data.user;
 }
 
 async function loadUsers() {
@@ -75,30 +94,59 @@ async function loadUsers() {
   const users = data.users || [];
   els.count.textContent = `${users.length} users`;
 
-  els.tbody.innerHTML = users.map(u => {
+  els.tbody.innerHTML = users.map((u) => {
     const paidChecked = Number(u.paid) === 1 ? "checked" : "";
+
     return `
-      <tr style="border-top:1px solid rgba(255,255,255,.10);">
+      <tr data-user-row="${esc(u.id)}" style="border-top:1px solid rgba(255,255,255,.10);">
         <td style="padding:10px;" class="tiny">${esc(u.id)}</td>
         <td style="padding:10px;">${esc(u.firstName)}</td>
-        <td style="padding:10px;">${esc(u.nick)}</td>
-        <td style="padding:10px;" class="tiny">${esc(u.email)}</td>
+
+        <!-- Nick: editable -->
+        <td style="padding:10px;">
+          <input
+            class="tiny"
+            data-edit-nick="${esc(u.id)}"
+            value="${esc(u.nick)}"
+            style="width:160px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff;"
+          />
+        </td>
+
+        <!-- Email: editable -->
+        <td style="padding:10px;" class="tiny">
+          <input
+            class="tiny"
+            data-edit-email="${esc(u.id)}"
+            value="${esc(u.email)}"
+            style="width:260px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff;"
+          />
+        </td>
+
+        <!-- Phone: НЕ редактируем -->
         <td style="padding:10px;" class="tiny">${esc(u.phone)}</td>
+
         <td style="padding:10px;" class="tiny">${esc(u.tournament)}</td>
         <td style="padding:10px;">${badgeYesNo(u.phoneVerified, "Verified", "No")}</td>
         <td style="padding:10px;">${badgeYesNo(u.paid, "Paid", "No")}</td>
+
+        <!-- paid toggle -->
         <td style="padding:10px;">
           <label class="auth-check" style="gap:8px;">
             <input type="checkbox" data-paid-toggle="${esc(u.id)}" ${paidChecked}/>
             <span class="tiny">Mark paid</span>
           </label>
         </td>
+
+        <!-- Save -->
+        <td style="padding:10px;">
+          <button class="btn btn-ghost tiny" type="button" data-save-user="${esc(u.id)}">Save</button>
+        </td>
       </tr>
     `;
   }).join("");
 
-  // навесим события на чекбоксы
-  document.querySelectorAll("[data-paid-toggle]").forEach(ch => {
+  // ✅ paid toggle events
+  document.querySelectorAll("[data-paid-toggle]").forEach((ch) => {
     ch.addEventListener("change", async () => {
       const id = ch.getAttribute("data-paid-toggle");
       const paid = ch.checked;
@@ -124,6 +172,33 @@ async function loadUsers() {
       }
     });
   });
+
+  // ✅ Save nick/email events
+  document.querySelectorAll("[data-save-user]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-save-user");
+
+      const nickEl = document.querySelector(`[data-edit-nick="${CSS.escape(id)}"]`);
+      const emailEl = document.querySelector(`[data-edit-email="${CSS.escape(id)}"]`);
+
+      const newNick = nickEl?.value ?? "";
+      const newEmail = emailEl?.value ?? "";
+
+      try {
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+
+        await adminUpdateUser(id, { nick: newNick, email: newEmail });
+
+        btn.textContent = "Saved ✅";
+        setTimeout(() => (btn.textContent = "Save"), 900);
+      } catch (e) {
+        alert(e.message || "Save error");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
 }
 
 async function boot() {
@@ -133,7 +208,6 @@ async function boot() {
       await loadUsers();
       return;
     } catch (e) {
-      // токен протух/невалидный
       clearToken();
     }
   }
