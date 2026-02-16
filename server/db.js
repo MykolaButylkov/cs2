@@ -1,9 +1,14 @@
+// db.js
+import sqlite3 from "sqlite3";
+import { open } from "sqlite";
+
 async function ensureColumn(db, columnName, definition) {
   const columns = await db.all(`PRAGMA table_info(users)`);
-  const exists = columns.some(c => c.name === columnName);
+  const exists = columns.some((c) => c.name === columnName);
+
   if (!exists) {
-    await db.exec(`ALTER TABLE users ADD COLUMN ${columnName} ${definition}`);
-    console.log(`Column added: ${columnName}`);
+    await db.exec(`ALTER TABLE users ADD COLUMN "${columnName}" ${definition}`);
+    console.log(`✅ Column added: ${columnName}`);
   }
 }
 
