@@ -31,7 +31,19 @@ const ADMIN_LOGIN = requireEnv("ADMIN_LOGIN");
 const ADMIN_PASSWORD = requireEnv("ADMIN_PASSWORD");
 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-const dbPromise = initDB();
+
+/**
+ * ✅ ВАЖНО ДЛЯ Render Persistent Disk:
+ * DB_FILE должен указывать на путь внутри диска, например:
+ * /var/data/app.db
+ *
+ * Локально можешь не задавать — будет ./app.db
+ */
+const DB_FILE =
+  process.env.DB_FILE ||
+  (process.env.RENDER ? "/var/data/app.db" : "./app.db");
+
+const dbPromise = initDB(DB_FILE);
 
 /* =========================
    ✅ CORS (GitHub Pages + локалка)
@@ -55,13 +67,13 @@ const corsOptions = {
 
     const o = normalizeOrigin(origin);
 
-    // разрешаем любой *.github.io (можно ужесточить до одного домена)
+    // разрешаем любой *.github.io
     if (o.endsWith(".github.io")) return cb(null, true);
 
     if (allowlist.has(o)) return cb(null, true);
 
     console.log("CORS BLOCKED ORIGIN:", o);
-    // ВАЖНО: не throw, иначе preflight ломается
+    // важно: не throw, чтобы preflight не "падал"
     return cb(null, false);
   },
   credentials: false,
@@ -125,7 +137,7 @@ function normPhone(phone) {
 /* =========================
    Routes
 ========================= */
-app.get("/api/health", (req, res) => res.json({ ok: true }));
+app.get("/api/health", (req, res) => res.json({ ok: true, dbFile: DB_FILE }));
 
 /* ===== 1) SEND SMS ===== */
 app.post("/api/sms/send", async (req, res) => {
@@ -303,7 +315,7 @@ app.post("/api/admin/login", (req, res) => {
   res.json({ ok: true, token });
 });
 
-// ✅ List users (admin only) — ДОБАВИЛ teamName
+// List users (admin only) — teamName включен
 app.get("/api/admin/users", adminRequired, async (req, res) => {
   try {
     const db = await dbPromise;
@@ -357,7 +369,7 @@ app.post("/api/admin/user/:id/payment", adminRequired, async (req, res) => {
   }
 });
 
-// ✅ UPDATE user (admin) — nick/email/teamName (телефон НЕ меняем)
+// UPDATE user (admin) — nick/email/teamName (телефон НЕ меняем)
 app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
   try {
     const db = await dbPromise;
@@ -421,13 +433,11 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
   }
 });
 
-// ✅ Очистить ВСЮ таблицу users (admin only)
-// В Postman/Fetch: POST /api/admin/clear-users  (Bearer token обязателен)
+// Очистить users (admin only)
 app.post("/api/admin/clear-users", adminRequired, async (req, res) => {
   try {
     const db = await dbPromise;
     await db.exec("DELETE FROM users;");
-    // сброс автоинкремента (SQLite)
     await db.exec("DELETE FROM sqlite_sequence WHERE name='users';");
     res.json({ ok: true });
   } catch (e) {
@@ -442,4 +452,5 @@ app.post("/api/admin/clear-users", adminRequired, async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port", PORT);
+  console.log("SQLite DB file:", DB_FILE);
 });
