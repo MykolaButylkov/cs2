@@ -111,7 +111,7 @@ async function loadUsers() {
             style="width:160px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff;"
           />
         </td>
-
+        <td style="padding:10px;">${esc(u.teamName)}</td>
         <!-- Email: editable -->
         <td style="padding:10px;" class="tiny">
           <input
