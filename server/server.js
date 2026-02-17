@@ -26,7 +26,7 @@ const TWILIO_AUTH_TOKEN = requireEnv("TWILIO_AUTH_TOKEN");
 const TWILIO_VERIFY_SID = requireEnv("TWILIO_VERIFY_SID");
 const JWT_SECRET = requireEnv("JWT_SECRET");
 
-// 🔐 Admin creds (Render Environment Variables)
+// Admin creds (Render Environment Variables)
 const ADMIN_LOGIN = requireEnv("ADMIN_LOGIN");
 const ADMIN_PASSWORD = requireEnv("ADMIN_PASSWORD");
 
@@ -61,7 +61,7 @@ const corsOptions = {
     if (allowlist.has(o)) return cb(null, true);
 
     console.log("CORS BLOCKED ORIGIN:", o);
-    // важно: не throw, иначе может ломаться preflight
+    // ВАЖНО: не throw, иначе preflight ломается
     return cb(null, false);
   },
   credentials: false,
@@ -90,7 +90,7 @@ function authRequired(req, res, next) {
     const payload = jwt.verify(token, JWT_SECRET);
     req.userId = payload.sub;
     next();
-  } catch (e) {
+  } catch {
     return res.status(401).json({ ok: false, error: "Invalid token" });
   }
 }
@@ -119,7 +119,6 @@ function normEmail(email) {
 }
 
 function normPhone(phone) {
-  // ожидаем E.164: +972XXXXXXXXX
   return String(phone || "").trim();
 }
 
@@ -134,9 +133,7 @@ app.post("/api/sms/send", async (req, res) => {
     const { phone } = req.body || {};
     const phoneNorm = normPhone(phone);
 
-    if (!phoneNorm) {
-      return res.status(400).json({ ok: false, error: "Phone required" });
-    }
+    if (!phoneNorm) return res.status(400).json({ ok: false, error: "Phone required" });
 
     await client.verify.v2
       .services(TWILIO_VERIFY_SID)
@@ -157,9 +154,7 @@ app.post("/api/sms/verify", async (req, res) => {
     const codeNorm = String(code || "").trim();
 
     if (!phoneNorm || !codeNorm) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Phone and code required" });
+      return res.status(400).json({ ok: false, error: "Phone and code required" });
     }
 
     const check = await client.verify.v2
@@ -180,21 +175,10 @@ app.post("/api/sms/verify", async (req, res) => {
 /* ===== 3) REGISTER ===== */
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const { firstName, nick, teamName, email, phone, tournament, password } =
-      req.body || {};
+    const { firstName, nick, teamName, email, phone, tournament, password } = req.body || {};
 
-    if (
-      !firstName ||
-      !nick ||
-      !teamName ||
-      !email ||
-      !phone ||
-      !tournament ||
-      !password
-    ) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Missing required fields" });
+    if (!firstName || !nick || !teamName || !email || !phone || !tournament || !password) {
+      return res.status(400).json({ ok: false, error: "Missing required fields" });
     }
 
     const db = await dbPromise;
@@ -209,9 +193,7 @@ app.post("/api/auth/register", async (req, res) => {
     );
 
     if (existing) {
-      return res
-        .status(409)
-        .json({ ok: false, error: "User already exists (email/phone)" });
+      return res.status(409).json({ ok: false, error: "User already exists (email/phone)" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -236,7 +218,6 @@ app.post("/api/auth/register", async (req, res) => {
     );
 
     const token = signToken(user);
-
     res.json({ ok: true, token, user });
   } catch (err) {
     console.error("REGISTER ERROR:", err?.message || err);
@@ -248,11 +229,8 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body || {};
-
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ ok: false, error: "Email and password required" });
+      return res.status(400).json({ ok: false, error: "Email and password required" });
     }
 
     const db = await dbPromise;
@@ -264,14 +242,10 @@ app.post("/api/auth/login", async (req, res) => {
       emailNorm
     );
 
-    if (!userRow) {
-      return res.status(401).json({ ok: false, error: "Invalid credentials" });
-    }
+    if (!userRow) return res.status(401).json({ ok: false, error: "Invalid credentials" });
 
     const okPass = await bcrypt.compare(password, userRow.passwordHash);
-    if (!okPass) {
-      return res.status(401).json({ ok: false, error: "Invalid credentials" });
-    }
+    if (!okPass) return res.status(401).json({ ok: false, error: "Invalid credentials" });
 
     const user = {
       id: userRow.id,
@@ -287,7 +261,6 @@ app.post("/api/auth/login", async (req, res) => {
     };
 
     const token = signToken(user);
-
     res.json({ ok: true, token, user });
   } catch (err) {
     console.error("LOGIN ERROR:", err?.message || err);
@@ -307,7 +280,6 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
     );
 
     if (!user) return res.status(404).json({ ok: false, error: "User not found" });
-
     res.json({ ok: true, user });
   } catch (err) {
     console.error("ME ERROR:", err?.message || err);
@@ -323,10 +295,7 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
 app.post("/api/admin/login", (req, res) => {
   const { login, password } = req.body || {};
 
-  if (
-    String(login || "") !== ADMIN_LOGIN ||
-    String(password || "") !== ADMIN_PASSWORD
-  ) {
+  if (String(login || "") !== ADMIN_LOGIN || String(password || "") !== ADMIN_PASSWORD) {
     return res.status(401).json({ ok: false, error: "Invalid admin credentials" });
   }
 
@@ -334,7 +303,7 @@ app.post("/api/admin/login", (req, res) => {
   res.json({ ok: true, token });
 });
 
-// List users (admin only)
+// ✅ List users (admin only) — ДОБАВИЛ teamName
 app.get("/api/admin/users", adminRequired, async (req, res) => {
   try {
     const db = await dbPromise;
@@ -359,9 +328,7 @@ app.post("/api/admin/user/:id/payment", adminRequired, async (req, res) => {
     const id = Number(req.params.id);
     const { paid, paymentRef } = req.body || {};
 
-    if (!Number.isFinite(id)) {
-      return res.status(400).json({ ok: false, error: "Bad id" });
-    }
+    if (!Number.isFinite(id)) return res.status(400).json({ ok: false, error: "Bad id" });
 
     const paidVal = paid ? 1 : 0;
     const paidAt = paidVal ? new Date().toISOString() : null;
@@ -390,33 +357,45 @@ app.post("/api/admin/user/:id/payment", adminRequired, async (req, res) => {
   }
 });
 
-// ✅ UPDATE user (admin) — менять nick и email (телефон не меняем)
+// ✅ UPDATE user (admin) — nick/email/teamName (телефон НЕ меняем)
 app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
   try {
     const db = await dbPromise;
     const id = Number(req.params.id);
 
-    const { nick, email } = req.body || {};
-
-    if (!Number.isFinite(id)) {
-      return res.status(400).json({ ok: false, error: "Bad id" });
-    }
+    const { nick, email, teamName } = req.body || {};
+    if (!id) return res.status(400).json({ ok: false, error: "Bad id" });
 
     const updates = [];
     const params = [];
 
     if (nick !== undefined) {
-      const nickTrim = String(nick).trim();
-      if (!nickTrim) return res.status(400).json({ ok: false, error: "Nick required" });
+      const v = String(nick).trim();
+      if (!v) return res.status(400).json({ ok: false, error: "Nick required" });
       updates.push("nick = ?");
-      params.push(nickTrim);
+      params.push(v);
+    }
+
+    if (teamName !== undefined) {
+      const v = String(teamName).trim();
+      if (!v) return res.status(400).json({ ok: false, error: "Team required" });
+      updates.push("teamName = ?");
+      params.push(v);
     }
 
     if (email !== undefined) {
-      const emailNorm = normEmail(email);
-      if (!emailNorm) return res.status(400).json({ ok: false, error: "Email required" });
+      const v = normEmail(email);
+      if (!v) return res.status(400).json({ ok: false, error: "Email required" });
+
+      const emailTaken = await db.get(
+        `SELECT id FROM users WHERE email = ? AND id <> ?`,
+        v,
+        id
+      );
+      if (emailTaken) return res.status(409).json({ ok: false, error: "Email already in use" });
+
       updates.push("email = ?");
-      params.push(emailNorm);
+      params.push(v);
     }
 
     if (updates.length === 0) {
@@ -425,19 +404,6 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
 
     const existingUser = await db.get(`SELECT id FROM users WHERE id = ?`, id);
     if (!existingUser) return res.status(404).json({ ok: false, error: "User not found" });
-
-    // проверка уникальности email (если меняем)
-    if (email !== undefined) {
-      const emailNorm = normEmail(email);
-      const emailTaken = await db.get(
-        `SELECT id FROM users WHERE email = ? AND id <> ?`,
-        emailNorm,
-        id
-      );
-      if (emailTaken) {
-        return res.status(409).json({ ok: false, error: "Email already in use" });
-      }
-    }
 
     params.push(id);
     await db.run(`UPDATE users SET ${updates.join(", ")} WHERE id = ?`, params);
@@ -455,11 +421,25 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
   }
 });
 
+// ✅ Очистить ВСЮ таблицу users (admin only)
+// В Postman/Fetch: POST /api/admin/clear-users  (Bearer token обязателен)
+app.post("/api/admin/clear-users", adminRequired, async (req, res) => {
+  try {
+    const db = await dbPromise;
+    await db.exec("DELETE FROM users;");
+    // сброс автоинкремента (SQLite)
+    await db.exec("DELETE FROM sqlite_sequence WHERE name='users';");
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("ADMIN CLEAR USERS ERROR:", e?.message || e);
+    res.status(500).json({ ok: false, error: "Clear failed" });
+  }
+});
+
 /* =========================
    START SERVER (Render)
 ========================= */
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port", PORT);
 });
