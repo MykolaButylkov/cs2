@@ -42,6 +42,7 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
     return {
       firstName: document.getElementById("firstName").value.trim(),
       nick: document.getElementById("nick").value.trim(),
+      teamName: document.getElementById("teamName").value.trim(),
       email: document.getElementById("regEmail").value.trim(),
       phone: (phoneFull?.value || "").trim(),
       tournament: document.getElementById("regTournament").value,
@@ -55,6 +56,9 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
 
     if (pass1.length < 4) throw new Error("Password is too short.");
     if (pass1 !== pass2) throw new Error("Passwords do not match.");
+
+      const teamName = document.getElementById("teamName")?.value.trim();
+  if (!teamName) throw new Error("Enter team name."); // ✅ добавили
 
     const phone = (phoneFull?.value || "").trim();
     if (!phone || !phone.startsWith("+972")) {

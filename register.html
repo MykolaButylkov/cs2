@@ -128,10 +128,17 @@
               </div>
             </div>
 
+            <div class="field">
+              <label for="teamName">Team name</label>
+              <input id="teamName" name="teamName" placeholder="Team Falcons" required />
+            </div>
+
+
             <div class="grid-2">
               <div class="field">
                 <label for="regEmail">Email</label>
-                <input id="regEmail" name="email" type="email" placeholder="you@email.com" autocomplete="email" required />
+                <input id="regEmail" name="email" type="email" placeholder="you@email.com" autocomplete="email"
+                  required />
 
                 <!-- Email verification hint -->
                 <div id="emailVerifyBox" class="field-hint tiny" style="display:none;">
@@ -144,18 +151,9 @@
 
                 <div class="phone-il">
                   <span class="phone-il__prefix">🇮🇱 +972</span>
-                  <input
-                    id="phoneIL"
-                    class="phone-il__input"
-                    type="tel"
-                    inputmode="numeric"
-                    autocomplete="tel-national"
-                    placeholder="0501234567"
-                    maxlength="10"
-                    pattern="0(5[0-9])[0-9]{7}"
-                    title="Israeli mobile: 05Xxxxxxxx (10 digits)"
-                    required
-                  />
+                  <input id="phoneIL" class="phone-il__input" type="tel" inputmode="numeric" autocomplete="tel-national"
+                    placeholder="0501234567" maxlength="10" pattern="0(5[0-9])[0-9]{7}"
+                    title="Israeli mobile: 05Xxxxxxxx (10 digits)" required />
                 </div>
 
                 <!-- Phone verification (SMS) -->
@@ -198,30 +196,14 @@
             <div class="grid-2">
               <div class="field">
                 <label for="regPass">Password</label>
-                <input
-                  id="regPass"
-                  name="new-password"
-                  type="password"
-                  placeholder="••••••••"
-                  autocomplete="new-password"
-                  autocapitalize="off"
-                  spellcheck="false"
-                  required
-                />
+                <input id="regPass" name="new-password" type="password" placeholder="••••••••"
+                  autocomplete="new-password" autocapitalize="off" spellcheck="false" required />
               </div>
 
               <div class="field">
                 <label for="regPass2">Confirm</label>
-                <input
-                  id="regPass2"
-                  name="new-password-confirm"
-                  type="password"
-                  placeholder="••••••••"
-                  autocomplete="new-password"
-                  autocapitalize="off"
-                  spellcheck="false"
-                  required
-                />
+                <input id="regPass2" name="new-password-confirm" type="password" placeholder="••••••••"
+                  autocomplete="new-password" autocapitalize="off" spellcheck="false" required />
               </div>
             </div>
 
@@ -285,4 +267,5 @@
   <script src="js/burger-menu.js"></script>
   <script src="js/register.js"></script>
 </body>
+
 </html>

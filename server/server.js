@@ -26,7 +26,7 @@ const TWILIO_AUTH_TOKEN = requireEnv("TWILIO_AUTH_TOKEN");
 const TWILIO_VERIFY_SID = requireEnv("TWILIO_VERIFY_SID");
 const JWT_SECRET = requireEnv("JWT_SECRET");
 
-// 🔐 Admin creds (добавь в Render Environment Variables)
+// 🔐 Admin creds (Render Environment Variables)
 const ADMIN_LOGIN = requireEnv("ADMIN_LOGIN");
 const ADMIN_PASSWORD = requireEnv("ADMIN_PASSWORD");
 
@@ -61,14 +61,13 @@ const corsOptions = {
     if (allowlist.has(o)) return cb(null, true);
 
     console.log("CORS BLOCKED ORIGIN:", o);
-    // лучше вернуть false (без throw), чтобы preflight не ломался
-return cb(new Error("CORS blocked: " + o));
+    // важно: не throw, иначе может ломаться preflight
+    return cb(null, false);
   },
   credentials: false,
   methods: ["GET", "POST", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
@@ -158,7 +157,9 @@ app.post("/api/sms/verify", async (req, res) => {
     const codeNorm = String(code || "").trim();
 
     if (!phoneNorm || !codeNorm) {
-      return res.status(400).json({ ok: false, error: "Phone and code required" });
+      return res
+        .status(400)
+        .json({ ok: false, error: "Phone and code required" });
     }
 
     const check = await client.verify.v2
@@ -179,10 +180,21 @@ app.post("/api/sms/verify", async (req, res) => {
 /* ===== 3) REGISTER ===== */
 app.post("/api/auth/register", async (req, res) => {
   try {
-    const { firstName, nick, email, phone, tournament, password } = req.body || {};
+    const { firstName, nick, teamName, email, phone, tournament, password } =
+      req.body || {};
 
-    if (!firstName || !nick || !email || !phone || !tournament || !password) {
-      return res.status(400).json({ ok: false, error: "Missing required fields" });
+    if (
+      !firstName ||
+      !nick ||
+      !teamName ||
+      !email ||
+      !phone ||
+      !tournament ||
+      !password
+    ) {
+      return res
+        .status(400)
+        .json({ ok: false, error: "Missing required fields" });
     }
 
     const db = await dbPromise;
@@ -197,17 +209,20 @@ app.post("/api/auth/register", async (req, res) => {
     );
 
     if (existing) {
-      return res.status(409).json({ ok: false, error: "User already exists (email/phone)" });
+      return res
+        .status(409)
+        .json({ ok: false, error: "User already exists (email/phone)" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
     const result = await db.run(
       `INSERT INTO users
-       (firstName, nick, email, phone, tournament, passwordHash, phoneVerified)
-       VALUES (?, ?, ?, ?, ?, ?, 1)`,
+       (firstName, nick, teamName, email, phone, tournament, passwordHash, phoneVerified)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
       String(firstName).trim(),
       String(nick).trim(),
+      String(teamName).trim(),
       emailNorm,
       phoneNorm,
       String(tournament).trim(),
@@ -215,7 +230,7 @@ app.post("/api/auth/register", async (req, res) => {
     );
 
     const user = await db.get(
-      `SELECT id, firstName, nick, email, phone, tournament, phoneVerified, paid, createdAt
+      `SELECT id, firstName, nick, teamName, email, phone, tournament, phoneVerified, paid, createdAt
        FROM users WHERE id = ?`,
       result.lastID
     );
@@ -235,14 +250,16 @@ app.post("/api/auth/login", async (req, res) => {
     const { email, password } = req.body || {};
 
     if (!email || !password) {
-      return res.status(400).json({ ok: false, error: "Email and password required" });
+      return res
+        .status(400)
+        .json({ ok: false, error: "Email and password required" });
     }
 
     const db = await dbPromise;
     const emailNorm = normEmail(email);
 
     const userRow = await db.get(
-      `SELECT id, firstName, nick, email, phone, tournament, phoneVerified, paid, passwordHash, createdAt
+      `SELECT id, firstName, nick, teamName, email, phone, tournament, phoneVerified, paid, passwordHash, createdAt
        FROM users WHERE email = ?`,
       emailNorm
     );
@@ -260,6 +277,7 @@ app.post("/api/auth/login", async (req, res) => {
       id: userRow.id,
       firstName: userRow.firstName,
       nick: userRow.nick,
+      teamName: userRow.teamName,
       email: userRow.email,
       phone: userRow.phone,
       tournament: userRow.tournament,
@@ -283,7 +301,7 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
     const db = await dbPromise;
 
     const user = await db.get(
-      `SELECT id, firstName, nick, email, phone, tournament, phoneVerified, paid, createdAt
+      `SELECT id, firstName, nick, teamName, email, phone, tournament, phoneVerified, paid, createdAt
        FROM users WHERE id = ?`,
       req.userId
     );
@@ -305,7 +323,10 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
 app.post("/api/admin/login", (req, res) => {
   const { login, password } = req.body || {};
 
-  if (String(login || "") !== ADMIN_LOGIN || String(password || "") !== ADMIN_PASSWORD) {
+  if (
+    String(login || "") !== ADMIN_LOGIN ||
+    String(password || "") !== ADMIN_PASSWORD
+  ) {
     return res.status(401).json({ ok: false, error: "Invalid admin credentials" });
   }
 
@@ -313,15 +334,13 @@ app.post("/api/admin/login", (req, res) => {
   res.json({ ok: true, token });
 });
 
-
-
 // List users (admin only)
 app.get("/api/admin/users", adminRequired, async (req, res) => {
   try {
     const db = await dbPromise;
 
     const users = await db.all(`
-      SELECT id, firstName, nick, email, phone, tournament,
+      SELECT id, firstName, nick, teamName, email, phone, tournament,
              phoneVerified, paid, paidAt, paymentRef, createdAt
       FROM users
       ORDER BY createdAt DESC
@@ -359,7 +378,7 @@ app.post("/api/admin/user/:id/payment", adminRequired, async (req, res) => {
     );
 
     const user = await db.get(
-      `SELECT id, firstName, nick, email, phone, tournament, phoneVerified, paid, paidAt, paymentRef, createdAt
+      `SELECT id, firstName, nick, teamName, email, phone, tournament, phoneVerified, paid, paidAt, paymentRef, createdAt
        FROM users WHERE id = ?`,
       id
     );
@@ -379,7 +398,9 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
 
     const { nick, email } = req.body || {};
 
-    if (!id) return res.status(400).json({ ok: false, error: "Bad id" });
+    if (!Number.isFinite(id)) {
+      return res.status(400).json({ ok: false, error: "Bad id" });
+    }
 
     const updates = [];
     const params = [];
@@ -402,7 +423,6 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
       return res.status(400).json({ ok: false, error: "Nothing to update" });
     }
 
-    // проверим, что юзер существует
     const existingUser = await db.get(`SELECT id FROM users WHERE id = ?`, id);
     if (!existingUser) return res.status(404).json({ ok: false, error: "User not found" });
 
@@ -419,12 +439,11 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
       }
     }
 
-    // обновляем
     params.push(id);
     await db.run(`UPDATE users SET ${updates.join(", ")} WHERE id = ?`, params);
 
     const user = await db.get(
-      `SELECT id, firstName, nick, email, phone, tournament, phoneVerified, paid, createdAt
+      `SELECT id, firstName, nick, teamName, email, phone, tournament, phoneVerified, paid, createdAt
        FROM users WHERE id = ?`,
       id
     );
@@ -435,7 +454,6 @@ app.patch("/api/admin/users/:id", adminRequired, async (req, res) => {
     res.status(500).json({ ok: false, error: "Update failed" });
   }
 });
-
 
 /* =========================
    START SERVER (Render)
