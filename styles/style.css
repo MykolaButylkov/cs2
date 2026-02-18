@@ -643,7 +643,7 @@ button, input, select{ font-family: inherit; }
   background-image:
     linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
     radial-gradient(circle at 30% 30%, rgba(255,190,90,0.12), transparent 55%),
-    url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=60");
+    url("../img/tornamens-first-5.png");
 }
 .thumb.t2{ background-image:
   linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
@@ -658,7 +658,7 @@ button, input, select{ font-family: inherit; }
 .thumb.t4{ background-image:
   linear-gradient(180deg, rgba(20,8,31,0.10), rgba(20,8,31,0.75)),
   radial-gradient(circle at 30% 30%, rgba(255,190,90,0.12), transparent 55%),
-  url("../img/tornamens-city-4.png");
+  url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=60");
 }
 
 .content{ padding: 14px; }
