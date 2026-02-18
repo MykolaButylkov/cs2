@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — CS2 Tournaments</title>
+
+  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/about.css" />
+  <link rel="shortcut icon" href="./img/logo.png" type="image/x-icon">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+
+        <a class="brand" href="index.html#home" aria-label="CS2 Tournaments Home">
+          <span class="brand-badge" aria-hidden="true"><span></span></span>
+          <span>CS2 TOURNAMENTS</span>
+        </a>
+
+        <nav class="nav-desktop" aria-label="Primary">
+          <a href="index.html#home">Home</a>
+          <a href="index.html#tournaments">Tournaments</a>
+          <a href="index.html#news">News</a>
+          <a href="about.html" class="is-active">About</a>
+        </nav>
+
+        <div class="header-actions header-actions-desktop">
+          <a class="btn btn-ghost" href="./login.html">Log in</a>
+          <a class="btn btn-gold" href="./register.html">Sign Up</a>
+        </div>
+
+        <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu__panel neon-wrap sheen">
+      <div class="mobile-menu__top">
+        <a class="brand" href="index.html#home">
+          <span class="brand-badge"><span></span></span>
+          <span>CS2 TOURNAMENTS</span>
+        </a>
+        <button class="mobile-close" type="button">✕</button>
+      </div>
+
+      <div class="mobile-menu__links">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#tournaments">Tournaments</a>
+        <a href="index.html#news">News</a>
+        <a href="about.html">About</a>
+      </div>
+
+      <div class="mobile-menu__actions">
+        <a class="btn btn-ghost" href="login.html">Log in</a>
+        <a class="btn btn-gold" href="register.html">Sign Up</a>
+      </div>
+
+      <div class="mobile-menu__bottom tiny">
+        Premium CS2 cups • Secure payments • Anti-cheat
+      </div>
+    </div>
+  </div>
+
+  <main class="about-page">
+
+    <!-- HERO -->
+    <section class="about-hero">
+      <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
+
+      <div class="container">
+        <div class="about-hero-grid">
+
+          <!-- LEFT -->
+          <div class="about-hero-left">
+            <div class="pill about-pill">
+              CSIL • FACEIT ecosystem • Tournament Production
+            </div>
+
+            <h1 class="hero-title about-title">
+              CS2 – Counter-Strike IL Tournament Organization
+            </h1>
+
+            <p class="hero-sub about-sub">
+              CS2 is a FACEIT company specializing in organizing, managing, and producing competitive tournaments in
+              Counter-Strike IL (CSIL). We build pro-level competitions while keeping them accessible for every skill level.
+            </p>
+
+            <div class="about-hero-actions">
+              <a class="btn btn-gold" href="register.html">Join a tournament</a>
+              <a class="btn btn-ghost" href="index.html#tournaments">See tournaments</a>
+            </div>
+
+            <div class="about-metrics">
+              <div class="metric neon-wrap sheen">
+                <div class="metric-num" data-count="120">0</div>
+                <div class="tiny">tournaments</div>
+              </div>
+              <div class="metric neon-wrap sheen">
+                <div class="metric-num" data-count="4800">0</div>
+                <div class="tiny">players</div>
+              </div>
+              <div class="metric neon-wrap sheen">
+                <div class="metric-num" data-count="99">0</div>
+                <div class="tiny">uptime %</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT -->
+          <div class="about-hero-right">
+            <div class="hero-card neon-wrap sheen">
+              <div class="hero-card-top">
+                <div class="hero-card-title">
+                  <span class="pill">LIVE</span>
+                  <span class="tiny">Production-ready tournaments</span>
+                </div>
+                <span class="secure-badge"><span class="lock"></span> Verified</span>
+              </div>
+
+              <div class="hero-collage" aria-hidden="true">
+                <div class="shot shot-a" data-unsplash="esports,arena,stage"></div>
+                <div class="shot shot-b" data-unsplash="gaming,team,esports"></div>
+                <div class="shot shot-c" data-unsplash="counter-strike,lan,tournament"></div>
+              </div>
+
+              <div class="hero-card-bottom tiny">
+                Stable match infrastructure • Admins & referees • Broadcast-ready flow
+              </div>
+            </div>
+
+            <div class="hero-mini-grid">
+              <div class="mini neon-wrap sheen">
+                <div class="mini-title">🎙️ Broadcast</div>
+                <div class="tiny">Casters & commentators</div>
+              </div>
+              <div class="mini neon-wrap sheen">
+                <div class="mini-title">🛡️ Fair Play</div>
+                <div class="tiny">Rules + anti-cheat checks</div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- AREAS -->
+    <section class="about-section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">🏆 Areas of Activity</h2>
+          <p class="tiny">Full tournament management — from registration to match servers and broadcasts.</p>
+        </div>
+
+        <div class="grid-3">
+          <article class="feature neon-wrap sheen">
+            <div class="feature-top"><span class="feature-ico">🏟️</span><h3>Online & LAN</h3></div>
+            <p>Production of CSIL tournaments with professional operations and clear formats.</p>
+          </article>
+
+          <article class="feature neon-wrap sheen">
+            <div class="feature-top"><span class="feature-ico">🧩</span><h3>Leagues</h3></div>
+            <p>Management of leagues & community competitions with seasons and brackets.</p>
+          </article>
+
+          <article class="feature neon-wrap sheen">
+            <div class="feature-top"><span class="feature-ico">🧠</span><h3>Seeding</h3></div>
+            <p>Registration + team seeding system to keep cups fair and balanced.</p>
+          </article>
+
+          <article class="feature neon-wrap sheen">
+            <div class="feature-top"><span class="feature-ico">🛰️</span><h3>Servers</h3></div>
+            <p>FACEIT partnership enables stable, pro-level competitive servers.</p>
+          </article>
+
+          <article class="feature neon-wrap sheen">
+            <div class="feature-top"><span class="feature-ico">🎙️</span><h3>Live shows</h3></div>
+            <p>Live broadcasts with casters, commentators, overlays and highlights.</p>
+          </article>
+
+          <article class="feature neon-wrap sheen">
+            <div class="feature-top"><span class="feature-ico">🛡️</span><h3>Admin team</h3></div>
+            <p>Admins and referees ensure fair play and smooth matches.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTNERSHIP + RATING -->
+    <section class="about-section alt">
+      <div class="container">
+        <div class="two-col">
+          <div class="neon-wrap sheen about-card">
+            <h2 class="section-title">🤝 Partnership</h2>
+            <p class="section-text">
+              We operate in collaboration with the FACEIT platform — enabling advanced match management,
+              ranking logic and a professional experience for players and teams.
+            </p>
+
+            <div class="badge-row">
+              <span class="secure-badge"><span class="lock"></span> Match management</span>
+              <span class="secure-badge"><span class="lock"></span> Ranking system</span>
+              <span class="secure-badge"><span class="lock"></span> Competitive rules</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="tiny">
+              Vision: create a clear progression path from amateur players to pro level.
+            </div>
+          </div>
+
+          <div class="neon-wrap sheen rating">
+            <div class="rating-top">
+              <h2 class="section-title" style="margin:0;">🎮 FACEIT-style rating</h2>
+              <span class="pill">CSIL Ladder</span>
+            </div>
+
+            <div class="rating-body">
+              <div class="rating-big">
+                <div class="rating-num" id="ratingNum">1675</div>
+                <div class="tiny">ELO (UI demo)</div>
+              </div>
+
+              <div class="rating-bars">
+                <div class="bar">
+                  <div class="bar-top"><span class="tiny">Aim consistency</span><span class="tiny">78%</span></div>
+                  <div class="bar-track"><div class="bar-fill" style="width:78%"></div></div>
+                </div>
+                <div class="bar">
+                  <div class="bar-top"><span class="tiny">Team coordination</span><span class="tiny">72%</span></div>
+                  <div class="bar-track"><div class="bar-fill" style="width:72%"></div></div>
+                </div>
+                <div class="bar">
+                  <div class="bar-top"><span class="tiny">Clutch factor</span><span class="tiny">64%</span></div>
+                  <div class="bar-track"><div class="bar-fill" style="width:64%"></div></div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+              <div class="tiny">Later we can connect real stats from your backend (admin + player dashboard).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="about-section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">🏆 Timeline</h2>
+          <p class="tiny">Clear growth plan — from community cups to LAN events and sponsors.</p>
+        </div>
+
+        <div class="timeline neon-wrap sheen">
+          <div class="tl-line" aria-hidden="true"></div>
+
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-title">Phase 1 — Community launch</div>
+              <div class="tiny">Online cups • ruleset • first leaderboard.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-title">Phase 2 — Seeding & fair play</div>
+              <div class="tiny">Seeding system • admins/referees • stable schedules.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-title">Phase 3 — Broadcast production</div>
+              <div class="tiny">Casters • overlays • highlight workflow.</div>
+            </div>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <div class="tl-title">Phase 4 — LAN & sponsors</div>
+              <div class="tiny">LAN events • sponsor packages • pro path.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP + AUDIENCE -->
+    <section class="about-section alt">
+      <div class="container">
+        <div class="two-col">
+
+          <div class="neon-wrap sheen about-card">
+            <h2 class="section-title">🌍 Israel region focus</h2>
+            <p class="section-text">
+              CS2 aims to become the central home for competitive CSIL players in the region.
+              We connect communities, teams, streamers, and sponsors around structured competition.
+            </p>
+
+            <div class="audience-grid">
+              <div class="aud-card neon-wrap sheen">Competitive CSIL players</div>
+              <div class="aud-card neon-wrap sheen">FACEIT teams</div>
+              <div class="aud-card neon-wrap sheen">Gaming communities</div>
+              <div class="aud-card neon-wrap sheen">Streamers & sponsors</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="cta-row">
+              <div>
+                <div class="cta-title">Ready to compete?</div>
+                <div class="tiny">Register your team and lock a slot in the next cup.</div>
+              </div>
+              <a class="btn btn-gold" href="register.html">Sign Up</a>
+            </div>
+          </div>
+
+          <div class="neon-wrap sheen map">
+            <div class="map-head">
+              <h3 style="margin:0;">Israel map</h3>
+              <span class="pill">tournament hubs</span>
+            </div>
+
+            <svg class="israel-map" viewBox="0 0 240 520" role="img" aria-label="Map of Israel">
+              <defs>
+                <linearGradient id="glowGrad" x1="0" x2="1">
+                  <stop offset="0" stop-color="rgba(139,92,246,.95)"/>
+                  <stop offset="1" stop-color="rgba(245,158,11,.95)"/>
+                </linearGradient>
+                <filter id="softGlow">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <path
+                d="M152 12
+                   C145 38 140 52 132 78
+                   C124 102 112 124 118 146
+                   C124 170 106 194 114 222
+                   C122 252 112 276 120 304
+                   C128 332 120 360 126 390
+                   C132 420 120 448 132 472
+                   C145 500 165 508 182 504
+                   C170 478 174 458 178 438
+                   C182 416 170 392 170 370
+                   C170 350 182 322 176 300
+                   C170 276 186 252 176 226
+                   C168 204 184 176 176 152
+                   C170 128 182 102 176 78
+                   C170 50 164 34 152 12 Z"
+                fill="rgba(255,255,255,0.05)"
+                stroke="url(#glowGrad)"
+                stroke-width="3"
+                filter="url(#softGlow)"
+              />
+
+              <circle cx="165" cy="120" r="7" fill="url(#glowGrad)"/>
+              <text x="180" y="125" fill="rgba(255,255,255,.85)" font-size="14">Haifa</text>
+
+              <circle cx="170" cy="165" r="7" fill="url(#glowGrad)"/>
+              <text x="185" y="170" fill="rgba(255,255,255,.85)" font-size="14">Tel Aviv</text>
+
+              <circle cx="176" cy="205" r="7" fill="url(#glowGrad)"/>
+              <text x="191" y="210" fill="rgba(255,255,255,.85)" font-size="14">Jerusalem</text>
+
+              <circle cx="168" cy="320" r="7" fill="url(#glowGrad)"/>
+              <text x="183" y="325" fill="rgba(255,255,255,.85)" font-size="14">Be’er Sheva</text>
+            </svg>
+
+            <div class="tiny" style="opacity:.85;">
+              Decorative map (UI). Later we can add real venues / LAN locations.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>© 2026 CS2 Tournaments. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="about.html">About</a>
+          <a href="index.html#news">Contact</a>
+          <a href="index.html#support">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/burger-menu.js"></script>
+  <script src="js/about.js"></script>
+</body>
+</html>
