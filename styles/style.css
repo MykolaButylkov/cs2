@@ -347,7 +347,7 @@ button, input, select{ font-family: inherit; }
 .mobile-menu{
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: 99999; /* было 2000 */
   display: none;
   padding: 16px;
 }
@@ -1167,7 +1167,7 @@ input:focus, select:focus{
 }
 
 /* чтобы контент был выше (если надо) */
-.site-header, main, .container, .neon-wrap{
+.site-header, main{
   position: relative;
   z-index: 1;
 }
