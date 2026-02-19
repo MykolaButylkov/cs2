@@ -7,19 +7,6 @@
   <title>Sign Up — CS2 Tournaments</title>
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="shortcut icon" href="./img/logo2.png" type="image/x-icon">
-
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=6Ld2fmssAAAAAAEnXTRgV4N_0RFEF62LivXNKCcZ"></script>
-  <script>
-    function onClick(e) {
-      e.preventDefault();
-      grecaptcha.enterprise.ready(async () => {
-        const token = await grecaptcha.enterprise.execute(
-          '6Ld2fmssAAAAAAEnXTRgV4N_0RFEF62LivXNKCcZ',
-          { action: 'LOGIN' }
-        );
-      });
-    }
-  </script>
 </head>
 
 <body>
@@ -38,7 +25,7 @@
           <a href="index.html#home">Home</a>
           <a href="index.html#tournaments">Tournaments</a>
           <a href="index.html#news">News</a>
-          <a href="index.html#about">About</a>
+          <a href="./about.html">About</a>
         </nav>
 
         <div class="header-actions header-actions-desktop">
@@ -68,7 +55,7 @@
         <a href="index.html#home">Home</a>
         <a href="index.html#tournaments">Tournaments</a>
         <a href="index.html#news">News</a>
-        <a href="index.html#about">About</a>
+        <a href="./about.html">About</a>
       </div>
 
       <div class="mobile-menu__actions">
@@ -230,14 +217,28 @@
     </div>
   </main>
 
-  <footer class="footer">
+  <footer id="about" class="footer">
     <div class="container">
       <div class="footer-grid">
         <div>© 2026 CS2 Tournaments. All rights reserved.</div>
+        <div class="footer-socialmedia">
+          <a href="https://www.instagram.com/csisraellan/" target="_blank" rel="noopener noreferrer">
+            <img style="width: 30px;" src="./img/instagram.png" alt="instagram">
+          </a>
+          <a href="https://www.tiktok.com/@csisraellan4?lang=ru-RU" target="_blank" rel="noopener noreferrer">
+            <img style="width: 30px;" src="./img/tik-tok.png" alt="instagram">
+          </a>
+          <a href="https://t.me/csisraellan" target="_blank" rel="noopener noreferrer">
+            <img  class="telegram-btn"  src="./img/telegram.png" alt="instagram">
+          </a>
+          <a href="https://www.twitch.tv/csisraellan" target="_blank" rel="noopener noreferrer">
+            <img class="twich-btn" src="./img/twich.png" alt="instagram">
+          </a>
+        </div>
         <div class="footer-links">
-          <a href="index.html#about">About</a>
-          <a href="index.html#news">Contact</a>
-          <a href="index.html#support">Support</a>
+          <a href="./about.html">About</a>
+          <a href="#news">Contact</a>
+          <a href="#support">Support</a>
         </div>
       </div>
     </div>

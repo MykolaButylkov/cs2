@@ -146,7 +146,6 @@ button, input, select{ font-family: inherit; }
   box-shadow: 0 10px 40px rgba(0,0,0,0.35);
   border-bottom: 1px solid rgba(255,217,138,0.10);
 
-  position: sticky;
   overflow: hidden;      /* важно: чтобы блики не “вылазили” */
 }
 
@@ -294,6 +293,15 @@ button, input, select{ font-family: inherit; }
   box-shadow: 0 0 38px rgba(124,43,130,0.45);
   transform: translateY(-2px);
 }
+
+.btn-twich {
+  background-color: #A544FF;
+}
+.btn-twich:hover{
+  box-shadow: 0 0 38px rgba(192, 66, 201, 0.45);
+  transform: translateY(-2px);
+}
+
 
 /* ============================= */
 /*     BURGER + FULLSCREEN MENU  */
@@ -1155,4 +1163,27 @@ input:focus, select:focus{
 .site-header, main, .container, .neon-wrap{
   position: relative;
   z-index: 1;
+}
+
+.about-hero-right_buttons-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-socialmedia {
+  position: relative;
+  display: flex;
+  gap: 20px;
+}
+
+.twich-btn {
+  position: absolute;
+  width: 40px;
+  top: -5px;
+
+}
+
+.telegram-btn {
+  width: 35px;
 }
