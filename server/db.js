@@ -38,5 +38,21 @@ export async function initDB(filename) {
   await ensureColumn(db, "paidAt", "TEXT");
   await ensureColumn(db, "paymentRef", "TEXT");
 
+  // ✅ NEW: password reset table
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS password_resets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER NOT NULL,
+      tokenHash TEXT NOT NULL,
+      expiresAt TEXT NOT NULL,
+      usedAt TEXT,
+      createdAt TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY(userId) REFERENCES users(id)
+    );
+  `);
+
+  await db.exec(`CREATE INDEX IF NOT EXISTS idx_password_resets_userId ON password_resets(userId);`);
+  await db.exec(`CREATE INDEX IF NOT EXISTS idx_password_resets_tokenHash ON password_resets(tokenHash);`);
+
   return db;
 }

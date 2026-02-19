@@ -6,6 +6,8 @@ import twilio from "twilio";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { initDB } from "./db.js";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 dotenv.config();
 
@@ -29,6 +31,21 @@ const JWT_SECRET = requireEnv("JWT_SECRET");
 // Admin creds (Render Environment Variables)
 const ADMIN_LOGIN = requireEnv("ADMIN_LOGIN");
 const ADMIN_PASSWORD = requireEnv("ADMIN_PASSWORD");
+
+const SMTP_HOST = requireEnv("SMTP_HOST");
+const SMTP_PORT = Number(requireEnv("SMTP_PORT"));
+const SMTP_SECURE = String(requireEnv("SMTP_SECURE")).toLowerCase() === "true";
+const SMTP_USER = requireEnv("SMTP_USER");
+const SMTP_PASS = requireEnv("SMTP_PASS");
+const APP_PUBLIC_URL = requireEnv("APP_PUBLIC_URL");
+
+const mailer = nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: SMTP_SECURE,
+  auth: { user: SMTP_USER, pass: SMTP_PASS },
+});
+
 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
@@ -133,6 +150,51 @@ function normEmail(email) {
 function normPhone(phone) {
   return String(phone || "").trim();
 }
+
+function sha256(s) {
+  return crypto.createHash("sha256").update(String(s)).digest("hex");
+}
+
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function addMinutesIso(min) {
+  return new Date(Date.now() + min * 60 * 1000).toISOString();
+}
+
+async function sendResetEmail({ to, link }) {
+  const subject = "Reset your CS2 Tournaments password";
+  const text =
+`You requested a password reset.
+
+Open this link to set a new password:
+${link}
+
+If you didn't request this, ignore this email.`;
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;line-height:1.5">
+    <h2 style="margin:0 0 10px">Reset your password</h2>
+    <p>Click the button below to set a new password:</p>
+    <p>
+      <a href="${link}" style="display:inline-block;padding:12px 16px;border-radius:10px;background:#ffd98a;color:#2b0f3a;text-decoration:none;font-weight:700">
+        Reset password
+      </a>
+    </p>
+    <p style="color:#666;font-size:12px">If you didn't request this, just ignore this email.</p>
+  </div>`;
+
+  await mailer.sendMail({
+    from: `"CS2 Tournaments" <${SMTP_USER}>`,
+    to,
+    subject,
+    text,
+    html,
+  });
+}
+
+
 
 /* =========================
    Routes
@@ -298,6 +360,97 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
     res.status(500).json({ ok: false, error: "Me failed" });
   }
 });
+
+// ===== 6) FORGOT PASSWORD =====
+app.post("/api/auth/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    const emailNorm = normEmail(email);
+
+    // ✅ Всегда отвечаем ok:true (чтобы не палить существование email)
+    if (!emailNorm) return res.json({ ok: true });
+
+    const db = await dbPromise;
+
+    const user = await db.get(`SELECT id, email FROM users WHERE email = ?`, emailNorm);
+
+    // если юзера нет — всё равно ok:true
+    if (!user) return res.json({ ok: true });
+
+    const token = crypto.randomBytes(32).toString("hex"); // одноразовый токен
+    const tokenHash = sha256(token);
+    const expiresAt = addMinutesIso(30); // 30 минут
+
+    await db.run(
+      `INSERT INTO password_resets (userId, tokenHash, expiresAt) VALUES (?, ?, ?)`,
+      user.id,
+      tokenHash,
+      expiresAt
+    );
+
+    const link =
+      `${APP_PUBLIC_URL}/reset-password.html?email=${encodeURIComponent(emailNorm)}&token=${encodeURIComponent(token)}`;
+
+    await sendResetEmail({ to: emailNorm, link });
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("FORGOT PASSWORD ERROR:", err?.message || err);
+    // ✅ тоже ok:true, чтобы не отличать ошибки
+    return res.json({ ok: true });
+  }
+});
+
+// ===== 7) RESET PASSWORD =====
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const { email, token, newPassword } = req.body || {};
+    const emailNorm = normEmail(email);
+    const tokenStr = String(token || "").trim();
+    const pass = String(newPassword || "");
+
+    if (!emailNorm || !tokenStr || pass.length < 4) {
+      return res.status(400).json({ ok: false, error: "Bad request" });
+    }
+
+    const db = await dbPromise;
+
+    const user = await db.get(`SELECT id FROM users WHERE email = ?`, emailNorm);
+    if (!user) return res.status(400).json({ ok: false, error: "Invalid reset link" });
+
+    const tokenHash = sha256(tokenStr);
+
+    const row = await db.get(
+      `SELECT id, expiresAt, usedAt
+       FROM password_resets
+       WHERE userId = ? AND tokenHash = ?
+       ORDER BY id DESC
+       LIMIT 1`,
+      user.id,
+      tokenHash
+    );
+
+    if (!row) return res.status(400).json({ ok: false, error: "Invalid reset link" });
+    if (row.usedAt) return res.status(400).json({ ok: false, error: "Reset link already used" });
+
+    const expMs = new Date(row.expiresAt).getTime();
+    if (!Number.isFinite(expMs) || expMs < Date.now()) {
+      return res.status(400).json({ ok: false, error: "Reset link expired" });
+    }
+
+    const passwordHash = await bcrypt.hash(pass, 10);
+
+    await db.run(`UPDATE users SET passwordHash = ? WHERE id = ?`, passwordHash, user.id);
+    await db.run(`UPDATE password_resets SET usedAt = ? WHERE id = ?`, nowIso(), row.id);
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("RESET PASSWORD ERROR:", err?.message || err);
+    return res.status(500).json({ ok: false, error: "Reset failed" });
+  }
+});
+
+
 
 /* =========================
    🔐 ADMIN ROUTES
