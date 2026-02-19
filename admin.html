@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <canvas class="fx-canvas fx-canvas--full" aria-hidden="true"></canvas>
 
     <header class="site-header">
         <div class="container">
@@ -26,7 +27,7 @@
     </header>
 
     <main class="auth-page">
-        <div class="container">
+        <div class="container" style="max-width: 1220px;">
             <div class="neon-wrap sheen" style="padding:22px;">
                 <h1 class="hero-title" style="margin:0;font-size:28px;">Admin Panel</h1>
                 <p class="hero-sub" style="margin:10px 0 0;">Players list, phone & payment statuses</p>
@@ -57,18 +58,41 @@
                         <span class="pill" id="usersCount">0 users</span>
                     </div>
 
+                    <div class="row" style="gap:12px; align-items:center; margin:12px 0;">
+                        <input id="adminSearch" class="input" type="search"
+                            placeholder="Search: name / nick / team / email / phone" style="max-width:360px;" />
+                    </div>
+
                     <div class="divider"></div>
 
                     <div style="overflow:auto;">
                         <table style="width:100%;border-collapse:collapse;min-width:900px;">
                             <thead>
                                 <tr style="text-align:left;">
-                                    <th class="tiny" style="padding:10px;">ID</th>
-                                    <th class="tiny" style="padding:10px;">Name</th>
-                                    <th class="tiny" style="padding:10px;">Nick</th>
-                                    <td class="tiny" style="padding:10px;">Team</td>
-                                    <th class="tiny" style="padding:10px;">Email</th>
-                                    <th class="tiny" style="padding:10px;">Phone</th>
+                                    <th data-sort="id" class="tiny" style="padding:10px;">
+                                        ID <span class="sort-arrow" data-arrow="id"></span>
+                                    </th>
+
+                                    <th data-sort="firstName" class="tiny" style="padding:10px;">
+                                        Name <span class="sort-arrow" data-arrow="firstName"></span>
+                                    </th>
+
+                                    <th data-sort="nick" class="tiny" style="padding:10px;">
+                                        Nick FaceIt <span class="sort-arrow" data-arrow="nick"></span>
+                                    </th>
+
+                                    <th data-sort="teamName" class="tiny" style="padding:10px;">
+                                        Team <span class="sort-arrow" data-arrow="teamName"></span>
+                                    </th>
+
+                                    <th data-sort="email" class="tiny" style="padding:10px;">
+                                        Email <span class="sort-arrow" data-arrow="email"></span>
+                                    </th>
+
+                                    <th data-sort="phone" class="tiny" style="padding:10px;">
+                                        Phone <span class="sort-arrow" data-arrow="phone"></span>
+                                    </th>
+
                                     <th class="tiny" style="padding:10px;">Tournament</th>
                                     <th class="tiny" style="padding:10px;">Phone verified</th>
                                     <th class="tiny" style="padding:10px;">Paid</th>
@@ -80,14 +104,16 @@
                             <tbody id="usersTbody"></tbody>
                         </table>
                     </div>
-
                 </section>
+
 
             </div>
         </div>
     </main>
 
     <script src="js/admin.js"></script>
+    <script src="js/fx-canvas.js"></script>
+
 </body>
 
 </html>

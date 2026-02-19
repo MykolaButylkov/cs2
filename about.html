@@ -11,14 +11,16 @@
 </head>
 
 <body>
+<canvas class="fx-canvas fx-canvas--full" aria-hidden="true"></canvas>
+
   <!-- HEADER -->
   <header class="site-header">
     <div class="container">
       <div class="header-inner">
 
         <a class="brand" href="index.html#home" aria-label="CS2 Tournaments Home">
-          <span class="brand-badge" aria-hidden="true"><span></span></span>
-          <span>CS2 TOURNAMENTS</span>
+           <img src="./img/logo2.png" style="width: 30px;" alt="logo">
+          <span style="margin-left: -10px;margin-bottom: 2px;font-size: 25px;font-weight: 500;">CSIL</span>
         </a>
 
         <nav class="nav-desktop" aria-label="Primary">
@@ -117,36 +119,6 @@
 
           <!-- RIGHT -->
           <div class="about-hero-right">
-            <!-- <div class="hero-card neon-wrap sheen">
-              <div class="hero-card-top">
-                <div class="hero-card-title">
-                  <span class="pill">LIVE</span>
-                  <span class="tiny">Production-ready tournaments</span>
-                </div>
-                <span class="secure-badge"><span class="lock"></span> Verified</span>
-              </div>
-
-              <div class="hero-collage" aria-hidden="true">
-                <div class="shot shot-a" data-unsplash="esports,arena,stage"></div>
-                <div class="shot shot-b" data-unsplash="gaming,team,esports"></div>
-                <div class="shot shot-c" data-unsplash="counter-strike,lan,tournament"></div>
-              </div>
-
-              <div class="hero-card-bottom tiny">
-                Stable match infrastructure • Admins & referees • Broadcast-ready flow
-              </div>
-            </div>
-
-            <div class="hero-mini-grid">
-              <div class="mini neon-wrap sheen">
-                <div class="mini-title">🎙️ Broadcast</div>
-                <div class="tiny">Casters & commentators</div>
-              </div>
-              <div class="mini neon-wrap sheen">
-                <div class="mini-title">🛡️ Fair Play</div>
-                <div class="tiny">Rules + anti-cheat checks</div>
-              </div>
-            </div> -->
             <img src="./img/logo3.png" alt="logo">
           </div>
 
@@ -156,6 +128,8 @@
 
     <!-- AREAS -->
     <section class="about-section">
+        <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
+
       <div class="container">
         <div class="section-head">
           <h2 class="section-title">🏆 Areas of Activity</h2>
@@ -413,5 +387,6 @@
 
   <script src="js/burger-menu.js"></script>
   <script src="js/about.js"></script>
+  <script src="js/fx-canvas.js"></script>
 </body>
 </html>
