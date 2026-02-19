@@ -1177,6 +1177,12 @@ input:focus, select:focus{
   gap: 20px;
 }
 
+@media (max-width: 860px) {
+.footer-socialmedia {
+  gap: 10px;
+}
+}
+
 .twich-btn {
   position: absolute;
   width: 40px;
