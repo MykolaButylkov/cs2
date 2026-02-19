@@ -1,15 +1,3 @@
-// js/admin.js — clean version (search + sort + arrows)
-// Requires in admin.html:
-// 1) <input id="adminSearch" ...>
-// 2) th headers with data-sort + arrow span:
-//    <th data-sort="firstName">Name <span data-arrow="firstName" class="sort-arrow"></span></th>
-//    <th data-sort="nick">Nick <span data-arrow="nick" class="sort-arrow"></span></th>
-//    <th data-sort="teamName">Team <span data-arrow="teamName" class="sort-arrow"></span></th>
-//    <th data-sort="email">Email <span data-arrow="email" class="sort-arrow"></span></th>
-//    <th data-sort="phone">Phone <span data-arrow="phone" class="sort-arrow"></span></th>
-//    (others optional)
-// 3) <tbody id="usersTbody"></tbody>
-
 (() => {
   "use strict";
 
@@ -32,9 +20,12 @@
   let allUsers = [];
   let viewUsers = [];
 
-  // default sorting: newest first (если нет createdAt — будет работать как строка/0)
+  // default sorting
   let sortKey = "createdAt";
   let sortDir = "desc"; // "asc" | "desc"
+
+  // edit state (only one row at a time)
+  let editingId = null;
 
   // ===== TOKEN =====
   function getToken() {
@@ -71,15 +62,12 @@
       "'": "&#039;",
     }[m]));
   }
-
   function norm(v) {
     return String(v ?? "").trim().toLowerCase();
   }
-
   function setCount(n) {
     if (els.count) els.count.textContent = `${n} users`;
   }
-
   function badgeYesNo(v, yesText = "Yes", noText = "No") {
     const ok = Number(v) === 1 || v === true;
     const text = ok ? yesText : noText;
@@ -88,14 +76,12 @@
       : "border-color: rgba(255,120,120,.35);";
     return `<span class="pill" style="${style}">${esc(text)}</span>`;
   }
-
   function parseDateMs(v) {
     const t = new Date(v || 0).getTime();
     return Number.isFinite(t) ? t : 0;
   }
 
   function compareByKey(a, b, key) {
-    // special keys
     if (key === "id") return Number(a?.id || 0) - Number(b?.id || 0);
     if (key === "createdAt") return parseDateMs(a?.createdAt) - parseDateMs(b?.createdAt);
 
@@ -117,6 +103,7 @@
       u.teamName,
       u.email,
       u.phone,
+      u.tournament,
     ].map(norm).join(" ");
     return hay.includes(q);
   }
@@ -193,49 +180,58 @@
     if (!els.tbody) return;
 
     els.tbody.innerHTML = (users || []).map((u) => {
+      const isEdit = String(editingId) === String(u.id);
       const paidChecked = Number(u.paid) === 1 ? "checked" : "";
+
+      const tdBase = `style="padding:10px;"`;
+
+      const nickCell = isEdit
+        ? `<input class="admin-input tiny" data-edit-nick="${esc(u.id)}" value="${esc(u.nick)}" />`
+        : `<span class="tiny">${esc(u.nick)}</span>`;
+
+      const teamCell = isEdit
+        ? `<input class="admin-input tiny" data-edit-team="${esc(u.id)}" value="${esc(u.teamName)}" />`
+        : `<span class="tiny">${esc(u.teamName)}</span>`;
+
+      const emailCell = isEdit
+        ? `<input class="admin-input tiny" data-edit-email="${esc(u.id)}" value="${esc(u.email)}" />`
+        : `<span class="tiny">${esc(u.email)}</span>`;
+
+      const actionCell = `
+        <label class="auth-check" style="gap:8px;">
+          <input type="checkbox" data-paid-toggle="${esc(u.id)}" ${paidChecked}/>
+          <span class="tiny">Mark paid</span>
+        </label>
+      `;
+
+      const editButtons = isEdit
+        ? `
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button class="btn btn-gold tiny" type="button" data-save-user="${esc(u.id)}">Save</button>
+            <button class="btn btn-ghost tiny" type="button" data-cancel-edit="${esc(u.id)}">Cancel</button>
+          </div>
+        `
+        : `
+          <button class="btn btn-ghost tiny" type="button" data-edit-row="${esc(u.id)}">Edit</button>
+        `;
 
       return `
         <tr data-user-row="${esc(u.id)}" style="border-top:1px solid rgba(255,255,255,.10);">
-          <td style="padding:10px;" class="tiny">${esc(u.id)}</td>
-          <td style="padding:10px;">${esc(u.firstName)}</td>
+          <td ${tdBase} class="tiny">${esc(u.id)}</td>
+          <td ${tdBase}>${esc(u.firstName)}</td>
 
-          <td style="padding:10px;">
-            <input
-              class="tiny"
-              data-edit-nick="${esc(u.id)}"
-              value="${esc(u.nick)}"
-              style="width:160px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff;"
-            />
-          </td>
+          <td ${tdBase}>${nickCell}</td>
+          <td ${tdBase}>${teamCell}</td>
+          <td ${tdBase}>${emailCell}</td>
 
-          <td style="padding:10px;" class="tiny">${esc(u.teamName)}</td>
+          <td ${tdBase} class="tiny">${esc(u.phone)}</td>
 
-          <td style="padding:10px;" class="tiny">
-            <input
-              class="tiny"
-              data-edit-email="${esc(u.id)}"
-              value="${esc(u.email)}"
-              style="width:260px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff;"
-            />
-          </td>
+          <td ${tdBase} class="tiny">${esc(u.tournament)}</td>
+          <td ${tdBase}>${badgeYesNo(u.phoneVerified, "Verified", "No")}</td>
+          <td ${tdBase}>${badgeYesNo(u.paid, "Paid", "No")}</td>
 
-          <td style="padding:10px;" class="tiny">${esc(u.phone)}</td>
-
-          <td style="padding:10px;" class="tiny">${esc(u.tournament)}</td>
-          <td style="padding:10px;">${badgeYesNo(u.phoneVerified, "Verified", "No")}</td>
-          <td style="padding:10px;">${badgeYesNo(u.paid, "Paid", "No")}</td>
-
-          <td style="padding:10px;">
-            <label class="auth-check" style="gap:8px;">
-              <input type="checkbox" data-paid-toggle="${esc(u.id)}" ${paidChecked}/>
-              <span class="tiny">Mark paid</span>
-            </label>
-          </td>
-
-          <td style="padding:10px;">
-            <button class="btn btn-ghost tiny" type="button" data-save-user="${esc(u.id)}">Save</button>
-          </td>
+          <td ${tdBase}>${actionCell}</td>
+          <td ${tdBase}>${editButtons}</td>
         </tr>
       `;
     }).join("");
@@ -253,7 +249,7 @@
         try {
           ch.disabled = true;
           await adminSetPaid(id, paid);
-          await fetchUsers(); // перерисует с текущим поиском/сортировкой
+          await fetchUsers();
         } catch (e) {
           alert(e.message || "Update error");
         } finally {
@@ -262,14 +258,33 @@
       });
     });
 
-    // save nick/email
+    // enter edit mode
+    document.querySelectorAll("[data-edit-row]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        editingId = btn.getAttribute("data-edit-row");
+        applySearchAndSort(); // rerender keeps current filter/sort
+      });
+    });
+
+    // cancel edit mode
+    document.querySelectorAll("[data-cancel-edit]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        editingId = null;
+        applySearchAndSort();
+      });
+    });
+
+    // save nick/team/email
     document.querySelectorAll("[data-save-user]").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const id = btn.getAttribute("data-save-user");
+
         const nickEl = document.querySelector(`[data-edit-nick="${CSS.escape(id)}"]`);
+        const teamEl = document.querySelector(`[data-edit-team="${CSS.escape(id)}"]`);
         const emailEl = document.querySelector(`[data-edit-email="${CSS.escape(id)}"]`);
 
         const newNick = nickEl?.value ?? "";
+        const newTeam = teamEl?.value ?? "";
         const newEmail = emailEl?.value ?? "";
 
         try {
@@ -277,11 +292,12 @@
           const prev = btn.textContent;
           btn.textContent = "Saving...";
 
-          await adminUpdateUser(id, { nick: newNick, email: newEmail });
+          await adminUpdateUser(id, { nick: newNick, teamName: newTeam, email: newEmail });
 
           btn.textContent = "Saved ✅";
-          setTimeout(() => (btn.textContent = prev), 900);
+          setTimeout(() => (btn.textContent = prev), 700);
 
+          editingId = null;
           await fetchUsers();
         } catch (e) {
           alert(e.message || "Save error");
@@ -315,6 +331,9 @@
         const key = th.getAttribute("data-sort");
         if (!key) return;
 
+        // если редактируем строку — лучше выйти из режима (иначе будет путаница при сортировке)
+        editingId = null;
+
         if (sortKey === key) {
           sortDir = sortDir === "asc" ? "desc" : "asc";
         } else {
@@ -331,7 +350,10 @@
     let t = null;
     els.search.addEventListener("input", () => {
       clearTimeout(t);
-      t = setTimeout(applySearchAndSort, 120);
+      t = setTimeout(() => {
+        editingId = null; // при поиске тоже выходим из edit
+        applySearchAndSort();
+      }, 120);
     });
   }
 
@@ -365,7 +387,10 @@
     }
   });
 
-  els.refresh?.addEventListener("click", fetchUsers);
+  els.refresh?.addEventListener("click", async () => {
+    editingId = null;
+    await fetchUsers();
+  });
 
   els.logout?.addEventListener("click", () => {
     clearToken();

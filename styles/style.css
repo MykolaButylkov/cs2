@@ -890,6 +890,13 @@ input:focus, select:focus{
   color: rgba(255,255,255,0.68);
   font-size: 13px;
 }
+
+@media (max-width: 860px) {
+  .footer-grid{
+    flex-direction: column;
+  }
+}
+
 .footer-links{
   display:flex;
   gap: 16px;
@@ -1177,12 +1184,6 @@ input:focus, select:focus{
   gap: 20px;
 }
 
-@media (max-width: 860px) {
-.footer-socialmedia {
-  gap: 10px;
-}
-}
-
 .twich-btn {
   position: absolute;
   width: 40px;
@@ -1192,4 +1193,20 @@ input:focus, select:focus{
 
 .telegram-btn {
   width: 35px;
+}
+
+/* ===== ADMIN INLINE EDIT ===== */
+.admin-input{
+  width: 100%;
+  max-width: 280px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.25);
+  color: #fff;
+}
+.admin-input:focus{
+  border-color: rgba(255,217,138,0.32);
+  box-shadow: 0 0 18px rgba(255,190,90,0.16);
+  outline: none;
 }
