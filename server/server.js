@@ -38,6 +38,7 @@ const SMTP_SECURE = String(requireEnv("SMTP_SECURE")).toLowerCase() === "true";
 const SMTP_USER = requireEnv("SMTP_USER");
 const SMTP_PASS = requireEnv("SMTP_PASS");
 const APP_PUBLIC_URL = requireEnv("APP_PUBLIC_URL");
+const SUPPORT_TO_EMAIL = process.env.SUPPORT_TO_EMAIL || "csisraellan@gmail.com";
 
 const mailer = nodemailer.createTransport({
   host: SMTP_HOST,
@@ -200,6 +201,99 @@ If you didn't request this, ignore this email.`;
    Routes
 ========================= */
 app.get("/api/health", (req, res) => res.json({ ok: true, dbFile: DB_FILE }));
+
+/* ===== SUPPORT: SEND MESSAGE TO EMAIL ===== */
+app.post("/api/support/message", async (req, res) => {
+  try {
+    const { name, email, topic, subject, message } = req.body || {};
+
+    const nameStr = String(name || "").trim();
+    const emailStr = String(email || "").trim();
+    const topicStr = String(topic || "").trim();
+    const subjectStr = String(subject || "").trim();
+    const messageStr = String(message || "").trim();
+
+    if (!nameStr || !emailStr || !subjectStr || !messageStr) {
+      return res.status(400).json({ ok: false, error: "Missing required fields" });
+    }
+
+    // простая проверка email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailStr)) {
+      return res.status(400).json({ ok: false, error: "Invalid email" });
+    }
+
+    // ограничим длины (чтобы не спамили огромными сообщениями)
+    if (subjectStr.length > 140) {
+      return res.status(400).json({ ok: false, error: "Subject is too long" });
+    }
+    if (messageStr.length > 4000) {
+      return res.status(400).json({ ok: false, error: "Message is too long" });
+    }
+
+    const safeTopic = topicStr || "Support";
+
+    const mailSubject = `CSIL Support: ${safeTopic} — ${subjectStr}`.slice(0, 180);
+
+    const text = `
+New Support Request (CSIL)
+
+Name: ${nameStr}
+Email: ${emailStr}
+Topic: ${safeTopic}
+Subject: ${subjectStr}
+
+Message:
+${messageStr}
+
+---
+Sent at: ${new Date().toISOString()}
+`;
+
+    const html = `
+<div style="font-family:Arial,sans-serif;line-height:1.5">
+  <h2 style="margin:0 0 8px">New Support Request</h2>
+  <div style="margin:10px 0;padding:10px 12px;border-radius:10px;background:#f6f6f6">
+    <div><b>Name:</b> ${escapeHtml(nameStr)}</div>
+    <div><b>Email:</b> ${escapeHtml(emailStr)}</div>
+    <div><b>Topic:</b> ${escapeHtml(safeTopic)}</div>
+    <div><b>Subject:</b> ${escapeHtml(subjectStr)}</div>
+  </div>
+  <div style="margin-top:10px">
+    <b>Message:</b>
+    <div style="white-space:pre-wrap;margin-top:6px;padding:12px;border-radius:10px;background:#ffffff;border:1px solid #e5e5e5">
+      ${escapeHtml(messageStr)}
+    </div>
+  </div>
+  <p style="color:#666;font-size:12px;margin-top:10px">
+    Sent at: ${new Date().toISOString()}
+  </p>
+</div>`;
+
+    await mailer.sendMail({
+      from: `"CS2 Tournaments Support" <${SMTP_USER}>`,
+      to: SUPPORT_TO_EMAIL,                 // ✅ csisraellan@gmail.com
+      replyTo: emailStr,                    // ✅ удобно отвечать прямо клиенту
+      subject: mailSubject,
+      text,
+      html,
+    });
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("SUPPORT MESSAGE ERROR:", err?.message || err);
+    return res.status(500).json({ ok: false, error: "Support message failed" });
+  }
+});
+
+/* small helper for HTML safe output */
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
 /* ===== 1) SEND SMS ===== */
 app.post("/api/sms/send", async (req, res) => {

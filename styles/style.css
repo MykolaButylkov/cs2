@@ -1210,3 +1210,65 @@ input:focus, select:focus{
   box-shadow: 0 0 18px rgba(255,190,90,0.16);
   outline: none;
 }
+
+/* intl-tel-input fix */
+.iti { width: 100%; }
+.iti__country-list { z-index: 99999; } /* чтобы список был поверх всего */
+.iti__dropdown-content { z-index: 99999; }
+
+/* ===== intl-tel-input FIX for dark theme ===== */
+
+/* Открытый список стран */
+.iti__country-list {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Обычные элементы списка */
+.iti__country {
+  color: #000000 !important;
+}
+
+/* При наведении */
+.iti__country:hover {
+  background-color: #f2f2f2 !important;
+}
+
+/* Выбранная страна */
+.iti__country.iti__highlight {
+  background-color: #e6e6e6 !important;
+}
+
+/* Поле поиска страны */
+.iti__search-input {
+  color: #000 !important;
+  background: #fff !important;
+}
+
+/* Текст в верхней части (selected country) */
+.iti__selected-flag {
+  color: #000 !important;
+}
+
+/* Фикс z-index (если меню перекрывается) */
+.iti__country-list {
+  z-index: 99999 !important;
+}
+
+textarea{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,217,138,0.14);
+  outline: none;
+  background: rgba(20,8,31,0.40);
+  color: rgba(255,255,255,0.92);
+  transition: .2s ease;
+  resize: vertical;
+  min-height: 140px;
+}
+
+textarea:focus{
+  border-color: rgba(255,217,138,0.32);
+  box-shadow: 0 0 24px rgba(255,190,90,0.16);
+}

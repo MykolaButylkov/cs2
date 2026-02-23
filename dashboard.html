@@ -6,10 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — CS2 Tournaments</title>
   <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/dashboard.css" />
   <link rel="shortcut icon" href="./img/logo2.png" type="image/x-icon">
 </head>
 
 <body>
+  <canvas class="fx-canvas fx-canvas--full" aria-hidden="true"></canvas>
+
   <header>
     <div class="container">
       <div class="header-inner">
@@ -33,35 +36,35 @@
           <span></span><span></span><span></span>
         </button>
 
-        
+
 
       </div>
     </div>
   </header>
   <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
-          <div class="mobile-menu__panel neon-wrap sheen">
-            <div class="mobile-menu__top">
-              <a class="brand" href="index.html#home">
-                <span class="brand-badge"><span></span></span>
-                <span>CS2 TOURNAMENTS</span>
-              </a>
-              <button class="mobile-close" type="button" aria-label="Close menu">✕</button>
-            </div>
+    <div class="mobile-menu__panel neon-wrap sheen">
+      <div class="mobile-menu__top">
+        <a class="brand" href="index.html#home">
+          <span class="brand-badge"><span></span></span>
+          <span>CS2 TOURNAMENTS</span>
+        </a>
+        <button class="mobile-close" type="button" aria-label="Close menu">✕</button>
+      </div>
 
-            <div class="mobile-menu__links">
-              <a href="index.html#home">Home</a>
-              <a href="index.html#tournaments">Tournaments</a>
-              <a href="index.html#news">News</a>
-              <a href="./about.html">About</a>
-            </div>
+      <div class="mobile-menu__links">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#tournaments">Tournaments</a>
+        <a href="index.html#news">News</a>
+        <a href="./about.html">About</a>
+      </div>
 
-            <div class="mobile-menu__actions">
-              <button class="btn btn-ghost" id="logoutBtnMobile" type="button">Log out</button>
-            </div>
+      <div class="mobile-menu__actions">
+        <button class="btn btn-ghost" id="logoutBtnMobile" type="button">Log out</button>
+      </div>
 
-            <div class="mobile-menu__bottom tiny">Account • Profile • Tournaments</div>
-          </div>
-        </div>
+      <div class="mobile-menu__bottom tiny">Account • Profile • Tournaments</div>
+    </div>
+  </div>
 
   <main class="auth-page">
     <div class="container">
@@ -117,25 +120,49 @@
           </div>
 
           <div class="neon-wrap sheen form-card" style="padding:18px;">
-            <div class="form-title">
-              <h3>Tournament</h3>
-              <p>Selected at registration</p>
-            </div>
-
-            <div class="stack-14" style="margin-top:12px;">
-              <div class="row">
-                <span style="color:rgba(255,255,255,.70)">Chosen tournament</span>
-                <span class="pill" id="uTournament">—</span>
+            <div class="neon-wrap sheen form-card dash-card" style="padding:18px;">
+              <div class="dash-card__head">
+                <div>
+                  <h3 class="dash-card__title">Tournament</h3>
+                  <p class="dash-card__sub">Selected at registration</p>
+                </div>
+                <span class="dash-badge">Active</span>
               </div>
 
-              <div class="divider" style="margin:14px 0;"></div>
+              <div class="tournament-hero">
+                <div class="tournament-hero__media">
+                  <img id="uTournamentImg" src="./img/tournaments/default.png" alt="Tournament image" />
+                  <div class="tournament-hero__shine"></div>
+                  <div class="tournament-hero__overlay"></div>
 
-              <button class="btn btn-gold" type="button" disabled>
-                Payment (coming next)
-              </button>
+                  <!-- маленький бейдж поверх картинки -->
+                  <div class="tournament-hero__chip">
+                    <span class="dot"></span>
+                    <span id="uTournamentChip">Tournament</span>
+                  </div>
+                </div>
 
-              <div class="tiny">
-                Next step: connect Tranzila and unlock payment for ₪50.
+                <div class="tournament-hero__meta">
+                  <div class="row">
+                    <span class="muted">Chosen tournament</span>
+                    <span class="pill" id="uTournament">—</span>
+                  </div>
+
+                  <div class="row">
+                    <span class="muted">Status</span>
+                    <span class="pill"><span class="online"><span class="g"></span> Online</span></span>
+                  </div>
+
+                  <div class="divider" style="margin:14px 0;"></div>
+
+                  <button class="btn btn-gold" type="button" disabled>
+                    Payment (coming next)
+                  </button>
+
+                  <div class="tiny">
+                    Next step: connect Tranzila and unlock payment for ₪50.
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -174,6 +201,8 @@
 
   <script src="js/burger-menu.js"></script>
   <script src="js/dashboard.js"></script>
+  <script src="js/fx-canvas.js"></script>
+
 </body>
 
 </html>

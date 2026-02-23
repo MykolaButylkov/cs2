@@ -1,0 +1,345 @@
+/* ============================= */
+/*        DASHBOARD PREMIUM      */
+/* ============================= */
+
+.dash-card {
+    border-radius: 22px;
+}
+
+.dash-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.dash-card__title {
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: .2px;
+    color: var(--gold1);
+}
+
+.dash-card__sub {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .70);
+}
+
+.dash-badge {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 217, 138, 0.16);
+    background: rgba(20, 8, 31, 0.30);
+    box-shadow: 0 0 22px rgba(255, 190, 90, 0.12);
+    color: rgba(255, 255, 255, .88);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .2px;
+}
+
+/* ===== Tournament premium block ===== */
+.tournament-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: stretch;
+}
+
+.tournament-hero__media {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 217, 138, 0.14);
+    background: rgba(20, 8, 31, 0.30);
+    box-shadow:
+        0 0 28px rgba(255, 190, 90, 0.12),
+        0 0 60px rgba(124, 43, 130, 0.10);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tournament-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(1.02);
+    filter: saturate(1.08) contrast(1.06);
+    display: block;
+}
+
+/* мягкий затемняющий градиент для читаемости */
+.tournament-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 217, 138, 0.12), transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(124, 43, 130, 0.18), transparent 55%),
+        linear-gradient(180deg, rgba(20, 8, 31, 0.10), rgba(20, 8, 31, 0.65));
+}
+
+/* “дорогой” блик */
+.tournament-hero__shine {
+    position: absolute;
+    inset: -40% -60%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    transform: rotate(18deg) translateX(-40%);
+    animation: dashShine 7.5s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+@keyframes dashShine {
+    0% {
+        transform: rotate(18deg) translateX(-55%);
+        opacity: .0;
+    }
+
+    15% {
+        opacity: .6;
+    }
+
+    45% {
+        opacity: .0;
+    }
+
+    100% {
+        transform: rotate(18deg) translateX(65%);
+        opacity: .0;
+    }
+}
+
+.tournament-hero__chip {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 217, 138, 0.18);
+    background: rgba(20, 8, 31, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 0 22px rgba(255, 190, 90, 0.14);
+    font-weight: 850;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .92);
+}
+
+.tournament-hero__chip .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 217, 138, 0.90);
+    box-shadow: 0 0 14px rgba(255, 190, 90, 0.45);
+}
+
+.tournament-hero__meta {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 217, 138, 0.12);
+    background: rgba(20, 8, 31, 0.22);
+    padding: 14px;
+}
+
+.muted {
+    color: rgba(255, 255, 255, .70);
+}
+
+/* чуть богаче pill на дашборде */
+.auth-page .pill {
+    border-color: rgba(255, 217, 138, 0.18);
+    background: rgba(20, 8, 31, 0.38);
+    box-shadow: 0 0 18px rgba(255, 190, 90, 0.10);
+}
+
+/* адаптив */
+@media (max-width: 980px) {
+    .tournament-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .tournament-hero__media {
+        min-height: 210px;
+    }
+}
+
+/* ============================= */
+/*        DASHBOARD PREMIUM      */
+/* ============================= */
+
+.dash-card {
+    border-radius: 22px;
+}
+
+.dash-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.dash-card__title {
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: .2px;
+    color: var(--gold1);
+}
+
+.dash-card__sub {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .70);
+}
+
+.dash-badge {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 217, 138, 0.16);
+    background: rgba(20, 8, 31, 0.30);
+    box-shadow: 0 0 22px rgba(255, 190, 90, 0.12);
+    color: rgba(255, 255, 255, .88);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .2px;
+}
+
+/* ===== Tournament premium block ===== */
+.tournament-hero {
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 14px;
+    align-items: stretch;
+}
+
+.tournament-hero__media {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 217, 138, 0.14);
+    background: rgba(20, 8, 31, 0.30);
+    box-shadow:
+        0 0 28px rgba(255, 190, 90, 0.12),
+        0 0 60px rgba(124, 43, 130, 0.10);
+    min-height: 240px;
+}
+
+.tournament-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    filter: saturate(1.08) contrast(1.06);
+    display: block;
+}
+
+/* мягкий затемняющий градиент для читаемости */
+.tournament-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 217, 138, 0.12), transparent 50%),
+        radial-gradient(circle at 80% 30%, rgba(124, 43, 130, 0.18), transparent 55%),
+        linear-gradient(180deg, rgba(20, 8, 31, 0.10), rgba(20, 8, 31, 0.65));
+}
+
+/* “дорогой” блик */
+.tournament-hero__shine {
+    position: absolute;
+    inset: -40% -60%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+    transform: rotate(18deg) translateX(-40%);
+    animation: dashShine 7.5s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+@keyframes dashShine {
+    0% {
+        transform: rotate(18deg) translateX(-55%);
+        opacity: .0;
+    }
+
+    15% {
+        opacity: .6;
+    }
+
+    45% {
+        opacity: .0;
+    }
+
+    100% {
+        transform: rotate(18deg) translateX(65%);
+        opacity: .0;
+    }
+}
+
+.tournament-hero__chip {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 217, 138, 0.18);
+    background: rgba(20, 8, 31, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 0 22px rgba(255, 190, 90, 0.14);
+    font-weight: 850;
+    font-size: 12px;
+    color: rgba(255, 255, 255, .92);
+}
+
+.tournament-hero__chip .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 217, 138, 0.90);
+    box-shadow: 0 0 14px rgba(255, 190, 90, 0.45);
+}
+
+.tournament-hero__meta {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 217, 138, 0.12);
+    background: rgba(20, 8, 31, 0.22);
+    padding: 14px;
+}
+
+.muted {
+    color: rgba(255, 255, 255, .70);
+}
+
+/* чуть богаче pill на дашборде */
+.auth-page .pill {
+    border-color: rgba(255, 217, 138, 0.18);
+    background: rgba(20, 8, 31, 0.38);
+    box-shadow: 0 0 18px rgba(255, 190, 90, 0.10);
+}
+
+/* адаптив */
+@media (max-width: 980px) {
+    .tournament-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .tournament-hero__media {
+        min-height: 210px;
+    }
+}
+
+/* dashboard container premium spacing */
+.auth-page .neon-wrap.sheen {
+    border-radius: 24px;
+}
+
+.auth-page .pay-grid {
+    gap: 16px;
+}

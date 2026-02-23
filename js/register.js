@@ -1,12 +1,13 @@
 // js/register.js
 (() => {
-const API_BASE = "https://cs2-backend-0jh2.onrender.com";
+  const API_BASE = "https://cs2-backend-0jh2.onrender.com";
 
   const form =
     document.querySelector("[data-register-form]") ||
     document.querySelector("form");
 
-  const phoneIL = document.getElementById("phoneIL");
+  // ✅ NEW input id
+  const phoneInput = document.getElementById("phoneNumber");
   const phoneFull = document.getElementById("phoneFull");
 
   const smsSendBtn = document.getElementById("smsSendBtn");
@@ -16,6 +17,21 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
   const submitBtn = form?.querySelector('button[type="submit"]');
 
   let phoneVerified = false;
+
+  // ✅ intl-tel-input init
+  let iti = null;
+  if (phoneInput && window.intlTelInput) {
+    iti = window.intlTelInput(phoneInput, {
+      initialCountry: "il",        // Израиль по умолчанию
+      separateDialCode: true,      // показывать +972 отдельно
+      nationalMode: false,         // чтобы getNumber() давал E.164
+      formatOnDisplay: true,
+      autoPlaceholder: "aggressive",
+      // важно для корректного форматирования/валидации
+      utilsScript:
+        "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/utils.js",
+    });
+  }
 
   function setLoading(isLoading, text = "Creating...") {
     if (!submitBtn) return;
@@ -38,7 +54,42 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
     if (smsSendBtn) smsSendBtn.disabled = true;
   }
 
+  // ✅ always sync hidden phoneFull as E.164 (+972..., +380..., +1...)
+  function syncPhone() {
+    if (!phoneFull) return;
+
+    if (!iti) {
+      // fallback (если вдруг библиотека не загрузилась)
+      const raw = (phoneInput?.value || "").trim();
+      phoneFull.value = raw.startsWith("+") ? raw : "";
+      return;
+    }
+
+    const number = iti.getNumber(); // E.164
+    phoneFull.value = number || "";
+  }
+
+  phoneInput?.addEventListener("input", () => {
+    syncPhone();
+    // если меняли номер — сбрасываем верификацию
+    if (phoneVerified) {
+      phoneVerified = false;
+      if (smsVerifyBtn) {
+        smsVerifyBtn.textContent = "Verify";
+        smsVerifyBtn.disabled = false;
+      }
+      if (smsSendBtn) smsSendBtn.disabled = false;
+    }
+  });
+
+  // при смене страны тоже синкаем
+  phoneInput?.addEventListener("countrychange", syncPhone);
+
+  // initial
+  syncPhone();
+
   function getPayload() {
+    syncPhone();
     return {
       firstName: document.getElementById("firstName").value.trim(),
       nick: document.getElementById("nick").value.trim(),
@@ -57,12 +108,21 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
     if (pass1.length < 4) throw new Error("Password is too short.");
     if (pass1 !== pass2) throw new Error("Passwords do not match.");
 
-      const teamName = document.getElementById("teamName")?.value.trim();
-  if (!teamName) throw new Error("Enter team name."); // ✅ добавили
+    const teamName = document.getElementById("teamName")?.value.trim();
+    if (!teamName) throw new Error("Enter team name.");
 
+    syncPhone();
     const phone = (phoneFull?.value || "").trim();
-    if (!phone || !phone.startsWith("+972")) {
-      throw new Error("Enter valid Israeli phone (0501234567).");
+
+    // ✅ validation through intl-tel-input
+    if (iti) {
+      if (!phone) throw new Error("Enter phone number.");
+      if (!iti.isValidNumber()) throw new Error("Enter a valid phone number.");
+    } else {
+      // fallback: require +...
+      if (!phone || !phone.startsWith("+")) {
+        throw new Error("Enter phone in international format (example: +972501234567).");
+      }
     }
 
     if (!phoneVerified) {
@@ -94,12 +154,16 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
     try {
       setSmsButtons(true, true);
 
-      // phoneFull у тебя заполняется отдельным inline-скриптом в HTML.
-      // Но на всякий случай убедимся, что оно не пустое.
+      syncPhone();
       const phone = (phoneFull?.value || "").trim();
       if (!phone) throw new Error("Phone is empty. Type number first.");
 
+      if (iti && !iti.isValidNumber()) {
+        throw new Error("Enter a valid phone number.");
+      }
+
       await postJson(`${API_BASE}/api/sms/send`, { phone });
+
       alert("✅ SMS sent. Enter the code and press Verify.");
       setSmsButtons(false, false);
     } catch (e) {
@@ -114,6 +178,7 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
     try {
       setSmsButtons(true, true);
 
+      syncPhone();
       const phone = (phoneFull?.value || "").trim();
       const code = (smsCodeInput?.value || "").trim();
 
@@ -141,19 +206,15 @@ const API_BASE = "https://cs2-backend-0jh2.onrender.com";
       setLoading(true);
 
       const payload = getPayload();
-
       const data = await postJson(`${API_BASE}/api/auth/register`, payload);
 
-      // ВАЖНО: чтобы перейти на dashboard “с данными”, нужно сохранить token+user
       if (data.token) localStorage.setItem("token", data.token);
       if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ РЕДИРЕКТ НА DASHBOARD
       window.location.href = "dashboard.html";
     } catch (err) {
       console.error(err);
 
-      // Если юзер уже существует — предложим логин
       const msg = err?.message || "Register failed";
       if (msg.toLowerCase().includes("already exists")) {
         alert("User already exists. Go to Login.");

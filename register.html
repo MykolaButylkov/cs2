@@ -7,6 +7,7 @@
   <title>Sign Up — CS2 Tournaments</title>
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="shortcut icon" href="./img/logo2.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/css/intlTelInput.css">
 </head>
 
 <body>
@@ -132,7 +133,7 @@
                   We sent a verification link to your email. Please verify it.
                 </div>
               </div>
-
+              <!-- 
               <div class="field">
                 <label for="phoneIL">Phone number</label>
 
@@ -142,6 +143,35 @@
                     placeholder="0501234567" maxlength="10" pattern="0(5[0-9])[0-9]{7}"
                     title="Israeli mobile: 05Xxxxxxxx (10 digits)" required />
                 </div>
+
+                <div id="phoneVerifyBox" class="stack-10" style="display:block;">
+                  <div class="divider"></div>
+
+                  <div class="row" style="gap:10px;align-items:flex-end;">
+                    <div class="field" style="flex:1;">
+                      <label for="smsCode">SMS code</label>
+                      <input style="width: 72px;" id="smsCode" inputmode="numeric" placeholder="123456" />
+                    </div>
+
+                    <button class="btn btn-ghost" id="smsSendBtn" type="button">Send SMS</button>
+                    <button class="btn btn-gold" id="smsVerifyBtn" type="button">Verify</button>
+                  </div>
+                </div>
+
+                <div class="tiny">You must verify phone to finish registration.</div>
+
+                <input type="hidden" name="phone" id="phoneFull" />
+
+                <div class="field-hint tiny">
+                  Enter Israeli mobile number (0501234567)
+                </div>
+              </div> -->
+              <div class="field">
+                <label for="phoneNumber">Phone number</label>
+
+                <!-- ✅ Поле телефона с выбором страны (все страны) -->
+                <input id="phoneNumber" type="tel" autocomplete="tel" placeholder="Phone number" required
+                  style="width:100%;" />
 
                 <!-- Phone verification (SMS) -->
                 <div id="phoneVerifyBox" class="stack-10" style="display:block;">
@@ -160,11 +190,11 @@
 
                 <div class="tiny">You must verify phone to finish registration.</div>
 
-                <!-- Это поле будет отправляться в формате +972XXXXXXXXX -->
+                <!-- ✅ Сюда всегда будет записываться E.164: +972..., +380..., +1... -->
                 <input type="hidden" name="phone" id="phoneFull" />
 
                 <div class="field-hint tiny">
-                  Enter Israeli mobile number (0501234567)
+                  Select country and enter your phone number.
                 </div>
               </div>
             </div>
@@ -229,7 +259,7 @@
             <img style="width: 30px;" src="./img/tik-tok.png" alt="instagram">
           </a>
           <a href="https://t.me/csisraellan" target="_blank" rel="noopener noreferrer">
-            <img  class="telegram-btn"  src="./img/telegram.png" alt="instagram">
+            <img class="telegram-btn" src="./img/telegram.png" alt="instagram">
           </a>
           <a href="https://www.twitch.tv/csisraellan" target="_blank" rel="noopener noreferrer">
             <img class="twich-btn" src="./img/twich.png" alt="instagram">
@@ -245,27 +275,8 @@
   </footer>
 
 
-
-  <!-- маленький скрипт, чтобы заполнить phoneFull как +972XXXXXXXXX -->
-  <script>
-    const phoneIL = document.getElementById('phoneIL');
-    const phoneFull = document.getElementById('phoneFull');
-
-    function syncPhone() {
-      const v = (phoneIL.value || '').replace(/\D/g, '');
-      // ожидаем 0501234567 -> +972501234567
-      if (v.length === 10 && v.startsWith('0')) {
-        phoneFull.value = '+972' + v.slice(1);
-      } else {
-        phoneFull.value = '';
-      }
-    }
-
-    phoneIL.addEventListener('input', syncPhone);
-    syncPhone();
-  </script>
-
   <script src="js/burger-menu.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.6/build/js/intlTelInput.min.js"></script>
   <script src="js/register.js"></script>
 </body>
 
