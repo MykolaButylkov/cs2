@@ -211,8 +211,8 @@
 
 /* ===== Tournament premium block ===== */
 .tournament-hero {
-    display: grid;
-    grid-template-columns: 1.05fr .95fr;
+    display: flex;
+    flex-direction: column;
     gap: 14px;
     align-items: stretch;
 }
