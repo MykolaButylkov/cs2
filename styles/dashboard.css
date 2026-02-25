@@ -343,3 +343,9 @@
 .auth-page .pay-grid {
     gap: 16px;
 }
+
+@media (max-width: 800px) {
+    .pill-tournament {
+        font-size: 13px;
+    }
+}
