@@ -536,9 +536,19 @@ button, input, select{ font-family: inherit; }
   align-items:center;
   gap: 8px;
 }
+.offline{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+}
 .online .g{
   width: 8px; height: 8px; border-radius: 50%;
   background: #38ff8a;
+  box-shadow: 0 0 14px rgba(56,255,138,0.35);
+}
+.offline .g{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #ff3863;
   box-shadow: 0 0 14px rgba(56,255,138,0.35);
 }
 
