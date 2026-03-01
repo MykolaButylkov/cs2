@@ -78,3 +78,68 @@ async function fetchMe(token) {
     if (!user) logout();
   }
 })();
+
+async function fetchJson(url, opts = {}) {
+  const res = await fetch(url, opts);
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data) throw new Error(data?.error || `Request failed (${res.status})`);
+  if (data.ok === false) throw new Error(data.error || "Request failed");
+  return data;
+}
+
+async function refreshPaymentUI() {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  const st = await fetchJson(`${API_BASE}/api/payment/status`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const payBtn = document.getElementById("payBtn");
+  const payHint = document.getElementById("payHint");
+  const uStatus = document.getElementById("uStatus");
+
+  if (st.paid) {
+    if (payBtn) {
+      payBtn.disabled = true;
+      payBtn.textContent = "Paid ✅";
+    }
+    if (payHint) payHint.textContent = `Payment received (${st.paymentRef || "ok"})`;
+    if (uStatus) uStatus.textContent = "Active";
+  } else {
+    if (payBtn) {
+      payBtn.disabled = false;
+      payBtn.textContent = "Pay ₪50 Entry Fee";
+    }
+    if (payHint) payHint.textContent = "Pay to confirm your spot in the tournament.";
+    if (uStatus) uStatus.textContent = "Registered";
+  }
+}
+
+document.getElementById("payBtn")?.addEventListener("click", async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token");
+
+    const data = await fetchJson(`${API_BASE}/api/payment/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    if (data.alreadyPaid) {
+      await refreshPaymentUI();
+      return;
+    }
+
+    // переходим на mock оплату
+    window.location.href = data.url;
+  } catch (e) {
+    alert(e.message || "Payment init failed");
+  }
+});
+
+// при загрузке
+refreshPaymentUI().catch(console.error);

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment — CSIL</title>
+  <link rel="stylesheet" href="styles/style.css"/>
+</head>
+<body>
+  <main class="auth-page">
+    <div class="container">
+      <section class="neon-wrap sheen" style="padding:22px; max-width:720px; margin:0 auto;">
+        <h1 class="hero-title" style="margin:0;">Mock Payment (Test)</h1>
+        <p class="hero-sub" style="margin:10px 0 0;">
+          This page simulates Tranzila. When Tranzila is ready, we replace this flow with real payment.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="stack-14">
+          <div class="row" style="justify-content:space-between;">
+            <span style="color:rgba(255,255,255,.7)">Amount</span>
+            <span class="pill">₪50</span>
+          </div>
+
+          <div class="row" style="gap:10px;">
+            <button class="btn btn-gold" id="successBtn" type="button">Pay success ✅</button>
+            <button class="btn btn-ghost" id="cancelBtn" type="button">Cancel</button>
+          </div>
+
+          <div class="tiny" id="statusText"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+const API_BASE = "https://cs2-backend-0jh2.onrender.com";
+
+function getSession() {
+  const u = new URL(location.href);
+  return u.searchParams.get("session") || "";
+}
+
+async function postJson(url, body) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data) throw new Error(data?.error || `Request failed (${res.status})`);
+  if (data.ok === false) throw new Error(data.error || "Request failed");
+  return data;
+}
+
+document.getElementById("successBtn").addEventListener("click", async () => {
+  try {
+    const session = getSession();
+    if (!session) throw new Error("No session");
+    document.getElementById("statusText").textContent = "Processing...";
+    await postJson(`${API_BASE}/api/payment/mock/complete`, { session });
+    document.getElementById("statusText").textContent = "Paid ✅ Redirecting...";
+    setTimeout(() => location.href = "dashboard.html", 500);
+  } catch(e) {
+    alert(e.message || "Payment failed");
+  }
+});
+
+document.getElementById("cancelBtn").addEventListener("click", () => {
+  location.href = "dashboard.html";
+});
+</script>
+</body>
+</html>

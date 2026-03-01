@@ -456,6 +456,8 @@ app.get("/api/auth/me", authRequired, async (req, res) => {
   }
 });
 
+
+
 // ===== 6) FORGOT PASSWORD =====
 app.post("/api/auth/forgot-password", async (req, res) => {
   try {
@@ -545,7 +547,89 @@ app.post("/api/auth/reset-password", async (req, res) => {
   }
 });
 
+// =========================
+// 💳 PAYMENTS (MOCK NOW, TRANZILA LATER)
+// =========================
 
+// В памяти. Для теста ок.
+// (Если хочешь, позже сделаем таблицу payment_sessions в SQLite)
+const paymentSessions = new Map(); // sessionId -> { userId, amount, createdAt }
+
+// Создать "сессию оплаты"
+app.post("/api/payment/create", authRequired, async (req, res) => {
+  try {
+    const db = await dbPromise;
+
+    const user = await db.get(
+      `SELECT id, email, paid FROM users WHERE id = ?`,
+      req.userId
+    );
+
+    if (!user) return res.status(404).json({ ok: false, error: "User not found" });
+    if (user.paid) return res.json({ ok: true, alreadyPaid: true });
+
+    const amount = 50;
+    const sessionId = crypto.randomBytes(16).toString("hex");
+
+    paymentSessions.set(sessionId, {
+      userId: user.id,
+      amount,
+      createdAt: new Date().toISOString(),
+    });
+
+    // ✅ ссылка на GitHub Pages/домен (фронт)
+    // ВАЖНО: поставь сюда твой реальный домен фронта (csisraellan.co.il)
+    const payUrl = `https://csisraellan.co.il/pay-mock.html?session=${sessionId}`;
+
+    res.json({ ok: true, url: payUrl, sessionId, amount });
+  } catch (e) {
+    console.error("PAYMENT CREATE ERROR:", e?.message || e);
+    res.status(500).json({ ok: false, error: "Payment create failed" });
+  }
+});
+
+// Подтвердить mock оплату (нажимается на pay-mock.html)
+app.post("/api/payment/mock/complete", authRequired, async (req, res) => {
+  try {
+    const { session } = req.body || {};
+    const s = paymentSessions.get(String(session || ""));
+
+    if (!s) return res.status(400).json({ ok: false, error: "Bad session" });
+    if (s.userId !== req.userId) return res.status(403).json({ ok: false, error: "Forbidden" });
+
+    const db = await dbPromise;
+
+    await db.run(
+      `UPDATE users SET paid = 1, paidAt = ?, paymentRef = ? WHERE id = ?`,
+      new Date().toISOString(),
+      `mock_${session}`,
+      req.userId
+    );
+
+    paymentSessions.delete(session);
+
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("MOCK COMPLETE ERROR:", e?.message || e);
+    res.status(500).json({ ok: false, error: "Mock complete failed" });
+  }
+});
+
+// Статус оплаты для dashboard
+app.get("/api/payment/status", authRequired, async (req, res) => {
+  try {
+    const db = await dbPromise;
+    const row = await db.get(
+      `SELECT paid, paidAt, paymentRef FROM users WHERE id = ?`,
+      req.userId
+    );
+    if (!row) return res.status(404).json({ ok: false, error: "User not found" });
+    res.json({ ok: true, ...row });
+  } catch (e) {
+    console.error("PAYMENT STATUS ERROR:", e?.message || e);
+    res.status(500).json({ ok: false, error: "Status failed" });
+  }
+});
 
 /* =========================
    🔐 ADMIN ROUTES
