@@ -1290,3 +1290,69 @@ textarea:focus{
   object-position: center;
   display: block;
 }
+
+/* ========================= */
+/*     PRIVACY BAR BOTTOM    */
+/* ========================= */
+
+.privacy-popup{
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  max-width: 520px;
+  margin: auto;
+
+  background: rgba(30,10,45,0.95);
+  backdrop-filter: blur(10px);
+
+  border-radius: 14px;
+  padding: 16px 18px;
+
+  border: 1px solid rgba(255,217,138,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  animation: privacySlideUp .35s ease;
+}
+
+@keyframes privacySlideUp{
+  from{
+    transform: translateY(40px);
+    opacity:0;
+  }
+  to{
+    transform: translateY(0);
+    opacity:1;
+  }
+}
+
+.privacy-popup.hidden{
+  display:none;
+}
+
+.privacy-popup__text{
+  font-size:14px;
+  line-height:1.6;
+  color:rgba(255,255,255,0.85);
+}
+
+.privacy-popup__text a{
+  color:var(--gold1);
+  font-weight:600;
+}
+
+.privacy-popup__actions{
+  display:flex;
+  gap:10px;
+}
+
+.privacy-popup__actions button{
+  padding:8px 14px;
+  font-size:13px;
+}

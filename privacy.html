@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — CSIL Tournaments</title>
+  <link rel="shortcut icon" href="./img/logo2.png" type="image/x-icon" />
+  <style>
+    :root{
+      --bg0:#14081f;
+      --bg1:#1d0b2e;
+      --bg2:#2b0f3a;
+      --vio1:#3b1350;
+      --vio2:#5a1f6e;
+      --gold0:#ffb84d;
+      --gold1:#ffd98a;
+      --text:#ffffff;
+      --muted:#cfc7d7;
+      --border:1px solid rgba(255,217,138,0.18);
+      --shadow:0 0 30px rgba(255,170,60,0.18);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--bg0),var(--bg1) 45%,var(--bg2));
+      min-height:100vh;
+    }
+
+    .container{
+      max-width:980px;
+      margin:0 auto;
+      padding:40px 20px 80px;
+    }
+
+    .card{
+      position:relative;
+      border-radius:20px;
+      border:var(--border);
+      box-shadow:var(--shadow);
+      background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      padding:32px 24px;
+    }
+
+    h1,h2{
+      color:var(--gold1);
+      margin-top:0;
+    }
+
+    h1{
+      font-size:36px;
+      margin-bottom:10px;
+    }
+
+    h2{
+      font-size:22px;
+      margin-top:28px;
+      margin-bottom:10px;
+    }
+
+    p, li{
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
+    }
+
+    a{
+      color:var(--gold1);
+      text-decoration:none;
+    }
+
+    a:hover{
+      text-decoration:underline;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    .back-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 16px;
+      border-radius:12px;
+      color:#2b0f3a;
+      background:linear-gradient(90deg,var(--gold0),var(--gold1));
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .muted{
+      color:rgba(255,255,255,0.65);
+      font-size:13px;
+    }
+
+    /* popup */
+    .policy-popup{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(8,4,14,0.72);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      z-index:9999;
+      opacity:1;
+      visibility:visible;
+      transition:.25s ease;
+    }
+
+    .policy-popup.hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    .policy-popup__box{
+      width:min(92vw,560px);
+      border-radius:20px;
+      border:var(--border);
+      box-shadow:0 0 35px rgba(255,184,77,0.16);
+      background:linear-gradient(180deg,rgba(28,11,44,0.96),rgba(20,8,31,0.96));
+      padding:24px;
+    }
+
+    .policy-popup__title{
+      margin:0 0 10px;
+      color:var(--gold1);
+      font-size:26px;
+      font-weight:800;
+    }
+
+    .policy-popup__text{
+      color:var(--muted);
+      line-height:1.7;
+      margin:0 0 18px;
+    }
+
+    .policy-popup__actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:0;
+      cursor:pointer;
+      padding:12px 18px;
+      border-radius:12px;
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .btn-primary{
+      color:#2b0f3a;
+      background:linear-gradient(90deg,var(--gold0),var(--gold1));
+    }
+
+    .btn-secondary{
+      color:var(--gold1);
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,217,138,0.14);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a class="back-btn" href="./index.html">Back to site</a>
+      <div class="muted">Last updated: 2026</div>
+    </div>
+
+    <div class="card">
+      <h1>Privacy Policy</h1>
+      <p>
+        This Privacy Policy explains how CSIL Tournaments collects, uses, and protects
+        your personal information when you use our website and tournament services.
+      </p>
+
+      <h2>1. Information We Collect</h2>
+      <p>We may collect the following information:</p>
+      <ul>
+        <li>Name and nickname</li>
+        <li>Email address</li>
+        <li>Phone number</li>
+        <li>Team name and tournament registration details</li>
+        <li>Payment-related status information</li>
+        <li>Technical information such as browser type, IP address, and device data</li>
+      </ul>
+
+      <h2>2. How We Use Your Information</h2>
+      <p>We use your information to:</p>
+      <ul>
+        <li>Create and manage your account</li>
+        <li>Register you for tournaments</li>
+        <li>Send notifications related to tournaments and account activity</li>
+        <li>Verify your phone number or email</li>
+        <li>Process payments and payment confirmations</li>
+        <li>Improve platform security and user experience</li>
+      </ul>
+
+      <h2>3. Payments</h2>
+      <p>
+        Payments may be processed through third-party payment providers. We do not store
+        full bank card details on our servers unless explicitly stated by the payment provider.
+      </p>
+
+      <h2>4. Data Sharing</h2>
+      <p>
+        We do not sell your personal data. We may share limited information only with trusted
+        third-party services needed to operate the platform, such as payment services,
+        email services, SMS verification providers, and hosting providers.
+      </p>
+
+      <h2>5. Data Retention</h2>
+      <p>
+        We keep your personal information only for as long as necessary to provide the service,
+        comply with legal obligations, resolve disputes, and enforce our agreements.
+      </p>
+
+      <h2>6. Security</h2>
+      <p>
+        We take reasonable technical and organizational measures to protect your information.
+        However, no online service can guarantee absolute security.
+      </p>
+
+      <h2>7. Your Rights</h2>
+      <p>
+        You may request access, correction, or deletion of your personal data by contacting us.
+        We will review and respond within a reasonable period.
+      </p>
+
+      <h2>8. Cookies and Analytics</h2>
+      <p>
+        We may use cookies, local storage, and analytics tools to improve website functionality,
+        remember user preferences, and better understand platform usage.
+      </p>
+
+      <h2>9. Children’s Privacy</h2>
+      <p>
+        Our platform is not intended for children under the age required by applicable laws
+        to independently use such services.
+      </p>
+
+      <h2>10. Contact</h2>
+      <p>
+        If you have questions about this Privacy Policy, contact us at:
+        <a href="mailto:csisraellan@gmail.com">csisraellan@gmail.com</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- popup -->
+  <div class="policy-popup" id="privacyPopup">
+    <div class="policy-popup__box">
+      <h2 class="policy-popup__title">Privacy Notice</h2>
+      <p class="policy-popup__text">
+        By continuing to use this page, you confirm that you understand how CSIL Tournaments
+        collects and uses account, registration, and communication data as described in this Privacy Policy.
+      </p>
+      <div class="policy-popup__actions">
+        <button class="btn btn-primary" id="acceptPrivacyPopup">I Understand</button>
+        <button class="btn btn-secondary" id="closePrivacyPopup">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const popup = document.getElementById("privacyPopup");
+    const acceptBtn = document.getElementById("acceptPrivacyPopup");
+    const closeBtn = document.getElementById("closePrivacyPopup");
+
+    function hidePrivacyPopup() {
+      popup.classList.add("hidden");
+      localStorage.setItem("privacyPopupSeen", "yes");
+    }
+
+    // показывать popup при заходе на страницу
+    // если хочешь показывать всегда — убери if и оставь popup как есть
+    if (localStorage.getItem("privacyPopupSeen") === "yes") {
+      popup.classList.add("hidden");
+    }
+
+    acceptBtn.addEventListener("click", hidePrivacyPopup);
+    closeBtn.addEventListener("click", hidePrivacyPopup);
+  </script>
+</body>
+</html>

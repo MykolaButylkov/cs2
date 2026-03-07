@@ -349,8 +349,8 @@
           </div>
         </div>
 
-          
-          
+
+
         <section id="registration" class="neon-wrap premium-hover sheen auth-card">
           <div class="auth-card__top">
             <h2>Sign Up</h2>
@@ -486,7 +486,7 @@
             <img style="width: 30px;" src="./img/tik-tok.png" alt="instagram">
           </a>
           <a href="https://t.me/csisraellan" target="_blank" rel="noopener noreferrer">
-            <img  class="telegram-btn"  src="./img/telegram.png" alt="instagram">
+            <img class="telegram-btn" src="./img/telegram.png" alt="instagram">
           </a>
           <a href="https://www.twitch.tv/csisraellan" target="_blank" rel="noopener noreferrer">
             <img class="twich-btn" src="./img/twich.png" alt="instagram">
@@ -495,10 +495,32 @@
         <div class="footer-links">
           <a href="./about.html">About</a>
           <a href="./support.html">Support</a>
+          <a href="./privacy.html">Privacy Policy</a>
+          <a href="./refund.html">Refund Policy</a>
+          <a href="./terms.html">Terms of Service</a>
         </div>
       </div>
     </div>
   </footer>
+
+  <div class="privacy-popup hidden" id="privacyConsentPopup">
+
+  <div class="privacy-popup__text">
+    We use cookies and basic account data to operate tournaments and improve the platform.
+    By using this website you agree to our
+    <a href="privacy.html">Privacy Policy</a>,
+    <a href="terms.html">Terms</a> and
+    <a href="refund.html">Refund Policy</a>.
+  </div>
+
+  <div class="privacy-popup__actions">
+    <button class="btn btn-gold" id="privacyAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="privacyCloseBtn">Close</button>
+  </div>
+
+</div>
+
+<script src="js/privacy-popup.js"></script>
   <script>
     const phoneIL = document.getElementById('phoneIL');
     const phoneFull = document.getElementById('phoneFull');
@@ -516,6 +538,7 @@
     syncPhone();
   </script>
 
+  <script src="js/privacy-popup.js"></script>
   <script src="js/register.js"></script>
   <script src="js/fx-canvas.js"></script>
 
