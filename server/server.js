@@ -72,7 +72,10 @@ const allowlist = new Set([
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   "https://mykolabutylkov.github.io",
-  "https://csisraellan.co.il"
+  "https://csisraellan.co.il",
+  "http://csisraellan.co.il",
+  "https://www.csisraellan.co.il",
+  "http://www.csisraellan.co.il",
 ]);
 
 function normalizeOrigin(origin) {
@@ -168,7 +171,7 @@ function addMinutesIso(min) {
 async function sendResetEmail({ to, link }) {
   const subject = "Reset your CS2 Tournaments password";
   const text =
-`You requested a password reset.
+    `You requested a password reset.
 
 Open this link to set a new password:
 ${link}

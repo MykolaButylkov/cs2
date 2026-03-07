@@ -1282,3 +1282,11 @@ textarea:focus{
   border-color: rgba(255,217,138,0.32);
   box-shadow: 0 0 24px rgba(255,190,90,0.16);
 }
+
+#uTournamentImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  /* ✅ покажет целиком */
+  object-position: center;
+  display: block;
+}
