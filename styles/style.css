@@ -636,7 +636,7 @@ button, input, select{ font-family: inherit; }
 .section{ padding: 34px 0; }
 .section-title{
   text-align:center;
-  margin: 0 0 16px;
+  margin: 0 0 26px;
   font-size: 22px;
   color: var(--gold1);
   letter-spacing: 0.3px;
